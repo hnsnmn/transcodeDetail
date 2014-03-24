@@ -38,7 +38,7 @@ public class TranscodingServiceTest {
 
 	@Before
 	public void setUp() {
-		transcodingService = new TranscodingService(mediaSourceCopier, transcoder, thumbnailExtractor,
+		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier);
 	}
 	@Test
