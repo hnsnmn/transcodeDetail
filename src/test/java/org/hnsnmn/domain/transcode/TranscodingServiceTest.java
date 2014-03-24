@@ -51,6 +51,8 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeSuccessfully() {
+		when(jobRepository.findById(jobId)).thenReturn(new Job());
+
 		File mockMultimediaFile = mock(File.class);
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
 
@@ -61,6 +63,10 @@ public class TranscodingServiceTest {
 		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
 
 		transcodingService.transcode(jobId);
+
+		Job job = jobRepository.findById(jobId);
+		assertTrue(job.isSuccess());
+		assertEquals(Job.State.COMPLETED, job.isLastState());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
