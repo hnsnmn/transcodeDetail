@@ -1,6 +1,8 @@
 package org.hnsnmn.domain.transcode;
 
 
+import org.hnsnmn.domain.job.Job;
+import org.hnsnmn.domain.job.JobRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -38,6 +39,9 @@ public class TranscodingServiceTest {
 
 	private TranscodingService transcodingService;
 	private final Long jobId = new Long(1);
+
+
+	private JobRepository jobRepository;
 
 	@Before
 	public void setUp() {
@@ -75,6 +79,10 @@ public class TranscodingServiceTest {
 		} catch (Exception ex) {
 			assertSame(mockException, ex);
 		}
+
+		Job job = jobRepository.findById(jobId);
+		assertFalse(job.isSuccess());
+		assertEquals(Job.State.MEDIASOURCECOPYING, job.isLastState());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 	}
