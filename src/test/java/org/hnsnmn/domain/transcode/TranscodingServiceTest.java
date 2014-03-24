@@ -28,6 +28,8 @@ public class TranscodingServiceTest {
 	private Transcoder transcoder;
 	@Mock
 	private ThumbnailExtractor thumbnailExtractor;
+	@Mock
+	private CreatedFileSender createdFileSender;
 
 	@Test
 	public void transcodeSuccessfully() {
@@ -51,22 +53,29 @@ public class TranscodingServiceTest {
 		List<File> thumbnails = extractThumbnail(multimediaFile, jobId);
 
 		// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
+		sendCreatedFileToDestination(multimediaFiles, thumbnails, jobId);
+
 		// 결과를 통지
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(multimediaFile, jobId);
 		verify(thumbnailExtractor, only()).extract(multimediaFile, jobId);
+		verify(createdFileSender, only()).send(multimediaFiles, thumbnails, jobId);
 	}
 
-	private List<File> extractThumbnail(File multimediaFile, Long jobId) {
-		return thumbnailExtractor.extract(multimediaFile, jobId);
+	private File copyMultimediaSourceToLocal(Long jobId) {
+		return mediaSourceCopier.copy(jobId);
 	}
 
 	private List<File> transcode(File multimediaFile, Long jobId) {
 		return transcoder.transcode(multimediaFile, jobId);
 	}
 
-	private File copyMultimediaSourceToLocal(Long jobId) {
-		return mediaSourceCopier.copy(jobId);
+	private List<File> extractThumbnail(File multimediaFile, Long jobId) {
+		return thumbnailExtractor.extract(multimediaFile, jobId);
+	}
+
+	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, Long jobId) {
+		createdFileSender.send(multimediaFiles, thumbnails, jobId);
 	}
 }
