@@ -26,6 +26,8 @@ public class TranscodingServiceTest {
 	private MediaSourceCopier mediaSourceCopier;
 	@Mock
 	private Transcoder transcoder;
+	@Mock
+	private ThumbnailExtractor thumbnailExtractor;
 
 	@Test
 	public void transcodeSuccessfully() {
@@ -36,6 +38,9 @@ public class TranscodingServiceTest {
 		List<File> mockMultimediaFiles = new ArrayList<File>();
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
 
+		List<File> mockThumbnails = new ArrayList<File>();
+		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
+
 		// 미디어 원본으로부터 파일을 로컬에 복사한다.
 		File multimediaFile = copyMultimediaSourceToLocal(jobId);
 
@@ -43,11 +48,18 @@ public class TranscodingServiceTest {
 		List<File> multimediaFiles = transcode(multimediaFile, jobId);
 
 		// 로컬에 복사된 파일로부터 이미지를 추출한다.
+		List<File> thumbnails = extractThumbnail(multimediaFile, jobId);
+
 		// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
 		// 결과를 통지
 
 		verify(mediaSourceCopier, only()).copy(jobId);
-		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
+		verify(transcoder, only()).transcode(multimediaFile, jobId);
+		verify(thumbnailExtractor, only()).extract(multimediaFile, jobId);
+	}
+
+	private List<File> extractThumbnail(File multimediaFile, Long jobId) {
+		return thumbnailExtractor.extract(multimediaFile, jobId);
 	}
 
 	private List<File> transcode(File multimediaFile, Long jobId) {
