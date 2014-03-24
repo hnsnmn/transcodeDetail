@@ -93,6 +93,10 @@ public class TranscodingServiceTest {
 		assertEquals(Job.State.MEDIASOURCECOPYING, job.isLastState());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
+		verify(transcoder, never()).transcode(any(File.class), anyLong());
+		verify(thumbnailExtractor, never()).extract(any(File.class), anyLong());
+		verify(createdFileSender, never()).send(anyListOf(File.class), anyListOf(File.class), anyLong());
+		verify(jobResultNotifier, never()).notifyToRequester(anyLong());
 	}
 
 }
