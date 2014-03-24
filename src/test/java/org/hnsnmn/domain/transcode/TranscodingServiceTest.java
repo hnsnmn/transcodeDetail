@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -66,12 +67,16 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
+		RuntimeException mockException = new RuntimeException();
+		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
 		try {
 			transcodingService.transcode(jobId);
 			fail("발생해야 함");
 		} catch (Exception ex) {
-
+			assertSame(mockException, ex);
 		}
+
+		verify(mediaSourceCopier, only()).copy(jobId);
 	}
 
 }
