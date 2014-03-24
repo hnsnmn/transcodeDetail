@@ -61,9 +61,9 @@ public class TranscodingServiceTest {
 		notifyJobResultToRequester(jobId);
 
 		verify(mediaSourceCopier, only()).copy(jobId);
-		verify(transcoder, only()).transcode(multimediaFile, jobId);
-		verify(thumbnailExtractor, only()).extract(multimediaFile, jobId);
-		verify(createdFileSender, only()).send(multimediaFiles, thumbnails, jobId);
+		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
+		verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
+		verify(createdFileSender, only()).send(mockMultimediaFiles, mockThumbnails, jobId);
 		verify(jobResultNotifier, only()).notifyToRequester(jobId);
 
 	}
