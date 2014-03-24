@@ -30,6 +30,8 @@ public class TranscodingServiceTest {
 	private ThumbnailExtractor thumbnailExtractor;
 	@Mock
 	private CreatedFileSender createdFileSender;
+	@Mock
+	private JobResultNotifier jobResultNotifier;
 
 	@Test
 	public void transcodeSuccessfully() {
@@ -56,11 +58,14 @@ public class TranscodingServiceTest {
 		sendCreatedFileToDestination(multimediaFiles, thumbnails, jobId);
 
 		// 결과를 통지
+		notifyJobResultToRequester(jobId);
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(multimediaFile, jobId);
 		verify(thumbnailExtractor, only()).extract(multimediaFile, jobId);
 		verify(createdFileSender, only()).send(multimediaFiles, thumbnails, jobId);
+		verify(jobResultNotifier, only()).notifyToRequester(jobId);
+
 	}
 
 	private File copyMultimediaSourceToLocal(Long jobId) {
@@ -78,4 +83,9 @@ public class TranscodingServiceTest {
 	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, Long jobId) {
 		createdFileSender.send(multimediaFiles, thumbnails, jobId);
 	}
+
+	private void notifyJobResultToRequester(Long jobId) {
+		jobResultNotifier.notifyToRequester(jobId);
+	}
+
 }
