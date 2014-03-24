@@ -2,6 +2,9 @@ package org.hnsnmn.domain.transcode;
 
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 
@@ -12,8 +15,10 @@ import java.io.File;
  * Time: 오후 2:24
  * To change this template use File | Settings | File Templates.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TranscodingServiceTest {
 
+	@Mock
 	private MediaSourceCopier mediaSourceCopier;
 
 	@Test
