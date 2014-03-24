@@ -40,7 +40,7 @@ public class TranscodingServiceTest {
 	private TranscodingService transcodingService;
 	private final Long jobId = new Long(1);
 
-
+	@Mock
 	private JobRepository jobRepository;
 
 	@Before
@@ -71,6 +71,8 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
+		when(jobRepository.findById(jobId)).thenReturn(new Job());
+
 		RuntimeException mockException = new RuntimeException();
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
 		try {
