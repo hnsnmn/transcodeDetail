@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -35,15 +36,16 @@ public class TranscodingServiceTest {
 	private JobResultNotifier jobResultNotifier;
 
 	private TranscodingService transcodingService;
+	private final Long jobId = new Long(1);
 
 	@Before
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier);
 	}
+
 	@Test
 	public void transcodeSuccessfully() {
-		Long jobId = new Long(1);
 		File mockMultimediaFile = mock(File.class);
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
 
@@ -55,12 +57,21 @@ public class TranscodingServiceTest {
 
 		transcodingService.transcode(jobId);
 
-
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
 		verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
 		verify(createdFileSender, only()).send(mockMultimediaFiles, mockThumbnails, jobId);
 		verify(jobResultNotifier, only()).notifyToRequester(jobId);
+	}
+
+	@Test
+	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
+		try {
+			transcodingService.transcode(jobId);
+			fail("발생해야 함");
+		} catch (Exception ex) {
+
+		}
 	}
 
 }
