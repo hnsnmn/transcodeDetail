@@ -8,16 +8,22 @@ package org.hnsnmn.domain.job;
  * To change this template use File | Settings | File Templates.
  */
 public class Job {
+	private State state;
+
 	public boolean isSuccess() {
-		return false;  //To change body of created methods use File | Settings | File Templates.
+		return state == State.COMPLETED;
 	}
 
-	public State isLastState() {
-		return null;  //To change body of created methods use File | Settings | File Templates.
+	public State getLastState() {
+		return state;
+	}
+
+	public void changeState(State newState) {
+		this.state = newState;
 	}
 
 	public enum State {
-		MEDIASOURCECOPYING
+		COMPLETED, MEDIASOURCECOPYING
 
 	}
 }
