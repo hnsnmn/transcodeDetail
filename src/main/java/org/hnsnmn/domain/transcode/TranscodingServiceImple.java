@@ -50,8 +50,12 @@ public class TranscodingServiceImple implements TranscodingService {
 		// 로컬에 복사된 파일로부터 이미지를 추출한다.
 		List<File> thumbnails = extractThumbnail(multimediaFile, jobId);
 
+		changeJobState(jobId, State.SENDING);
+
 		// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
 		sendCreatedFileToDestination(multimediaFiles, thumbnails, jobId);
+
+		changeJobState(jobId, State.NOTIFYING);
 
 		// 결과를 통지
 		notifyJobResultToRequester(jobId);
