@@ -60,6 +60,11 @@ public class TranscodingServiceTest {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier, jobStateChnager, transcodingExceptionHandler);
 
+		when(jobRepository.findById(jobId)).thenReturn(mockJob);
+		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
+		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
+		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
+
 		doAnswer(new Answer() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -81,11 +86,6 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeSuccessfully() {
-		when(jobRepository.findById(jobId)).thenReturn(mockJob);
-		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
-		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
-		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
-
 		Job job = jobRepository.findById(jobId);
 		assertTrue(job.isWaiting());
 
@@ -106,7 +106,6 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
-		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 
 		RuntimeException mockException = new RuntimeException();
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
