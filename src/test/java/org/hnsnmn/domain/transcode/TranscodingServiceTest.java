@@ -64,6 +64,15 @@ public class TranscodingServiceTest {
 				return null;
 			}
 		}).when(jobStateChnager).changeJobState(anyLong(), any(Job.State.class));
+
+		doAnswer(new Answer() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				RuntimeException ex = (RuntimeException) invocation.getArguments()[1];
+				mockJob.exceptionOccurred(ex);
+				return null;  //To change body of implemented methods use File | Settings | File Templates.
+			}
+		}).when(transcodingExceptionHandler).notifyToJob(anyLong(), any(RuntimeException.class));
 	}
 
 	@Test
