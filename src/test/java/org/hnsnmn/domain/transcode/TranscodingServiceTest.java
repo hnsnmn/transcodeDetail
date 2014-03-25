@@ -54,6 +54,7 @@ public class TranscodingServiceTest {
 	private final File mockMultimediaFile = mock(File.class);
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
 	private final List<File> mockThumbnails = new ArrayList<File>();
+	private final RuntimeException mockException = new RuntimeException();
 
 	@Before
 	public void setUp() {
@@ -106,8 +107,6 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
-
-		RuntimeException mockException = new RuntimeException();
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
 		try {
 			transcodingService.transcode(jobId);
@@ -130,10 +129,6 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtTranscoder() {
-		when(jobRepository.findById(jobId)).thenReturn(mockJob);
-		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
-
-		RuntimeException mockException = new RuntimeException();
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenThrow(mockException);
 
 		try {
