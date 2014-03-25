@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hnsnmn.domain.job.Job.State;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -69,11 +70,11 @@ public class TranscodingServiceTest {
 		doAnswer(new Answer() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				Job.State newState = (Job.State) invocation.getArguments()[1];
+				State newState = (State) invocation.getArguments()[1];
 				mockJob.changeState(newState);
 				return null;
 			}
-		}).when(jobStateChnager).changeJobState(anyLong(), any(Job.State.class));
+		}).when(jobStateChnager).changeJobState(anyLong(), any(State.class));
 
 		doAnswer(new Answer() {
 			@Override
@@ -95,7 +96,7 @@ public class TranscodingServiceTest {
 		job = jobRepository.findById(jobId);
 		assertTrue(job.isFinished());
 		assertTrue(job.isSuccess());
-		assertEquals(Job.State.COMPLETED, job.getLastState());
+		assertEquals(State.COMPLETED, job.getLastState());
 		assertNull(job.getOccurredException());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
@@ -109,7 +110,7 @@ public class TranscodingServiceTest {
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
 
-		executeFaillingTranscodeAndAssertFail(Job.State.MEDIASOURCECOPYING);
+		executeFaillingTranscodeAndAssertFail(State.MEDIASOURCECOPYING);
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, never()).transcode(any(File.class), anyLong());
@@ -122,7 +123,7 @@ public class TranscodingServiceTest {
 	public void transcodeFailBecauseExceptionOccuredAtTranscoder() {
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenThrow(mockException);
 
-		executeFaillingTranscodeAndAssertFail(Job.State.TRANSCODING);
+		executeFaillingTranscodeAndAssertFail(State.TRANSCODING);
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
@@ -131,7 +132,7 @@ public class TranscodingServiceTest {
 		verify(jobResultNotifier, never()).notifyToRequester(anyLong());
 	}
 
-	private void executeFaillingTranscodeAndAssertFail(Job.State expectedLastState) {
+	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
 		try {
 			transcodingService.transcode(jobId);
 			fail("발생해야 함");
