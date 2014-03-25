@@ -42,6 +42,8 @@ public class TranscodingServiceTest {
 	private JobStateChnager jobStateChnager;
 	@Mock
 	private JobRepository jobRepository;
+	@Mock
+	private TranscodingExceptionHandler transcodingExceptionHandler;
 
 	private TranscodingService transcodingService;
 
@@ -52,7 +54,7 @@ public class TranscodingServiceTest {
 	@Before
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
-				createdFileSender, jobResultNotifier, jobStateChnager);
+				createdFileSender, jobResultNotifier, jobStateChnager, transcodingExceptionHandler);
 
 		doAnswer(new Answer() {
 			@Override
