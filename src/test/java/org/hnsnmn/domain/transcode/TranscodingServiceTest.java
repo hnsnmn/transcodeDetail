@@ -109,6 +109,7 @@ public class TranscodingServiceTest {
 		}
 
 		Job job = jobRepository.findById(jobId);
+		assertTrue(job.isFinished());
 		assertFalse(job.isSuccess());
 		assertEquals(Job.State.MEDIASOURCECOPYING, job.getLastState());
 
