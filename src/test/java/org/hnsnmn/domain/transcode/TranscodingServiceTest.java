@@ -168,6 +168,28 @@ public class TranscodingServiceTest {
 		verifyCollaboration(verifyOption);
 	}
 
+	@Test
+	public void transcodeFailBecauseExceptionOccuredAtCreatedFileSender() {
+		doThrow(mockException).when(createdFileSender).send(mockMultimediaFiles, mockThumbnails, jobId);
+		executeFaillingTranscodeAndAssertFail(State.SENDING);
+
+		VerifyOption verifyOption = new VerifyOption();
+		verifyOption.jobResultNotifierNever = true;
+		verifyCollaboration(verifyOption);
+	}
+
+	@Test
+	public void transcodeFailBecauseExceptionOccuredAtJobResultNotifier() {
+		doThrow(mockException).when(jobResultNotifier).notifyToRequester(jobId);
+		Job job = jobRepository.findById(jobId);
+		assertTrue(job.isWaiting());
+
+		executeFaillingTranscodeAndAssertFail(State.NOTIFYING);
+
+		VerifyOption verifyOption = new VerifyOption();
+		verifyCollaboration(verifyOption);
+	}
+
 	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
 		try {
 			transcodingService.transcode(jobId);
