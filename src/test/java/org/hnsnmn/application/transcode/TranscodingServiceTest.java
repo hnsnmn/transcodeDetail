@@ -7,9 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,24 +64,6 @@ public class TranscodingServiceTest {
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
 		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
-
-		doAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				State newState = (State) invocation.getArguments()[1];
-				mockJob.changeState(newState);
-				return null;
-			}
-		}).when(jobStateChnager).changeJobState(anyLong(), any(State.class));
-
-		doAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				RuntimeException ex = (RuntimeException) invocation.getArguments()[1];
-				mockJob.exceptionOccurred(ex);
-				return null;  //To change body of implemented methods use File | Settings | File Templates.
-			}
-		}).when(transcodingExceptionHandler).notifyToJob(anyLong(), any(RuntimeException.class));
 	}
 
 	@Test
