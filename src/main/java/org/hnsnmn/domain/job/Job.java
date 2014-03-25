@@ -8,8 +8,14 @@ package org.hnsnmn.domain.job;
  * To change this template use File | Settings | File Templates.
  */
 public class Job {
+
+
+	public enum State {
+		COMPLETED, MEDIASOURCECOPYING;
+	}
+
 	private State state;
-	private RuntimeException occurredException;
+	private Exception occurredException;
 
 	public boolean isSuccess() {
 		return state == State.COMPLETED;
@@ -35,13 +41,8 @@ public class Job {
 		return occurredException != null;
 	}
 
+
 	public Exception getOccurredException() {
 		return occurredException;
-	}
-
-
-	public enum State {
-		COMPLETED, MEDIASOURCECOPYING
-
 	}
 }
