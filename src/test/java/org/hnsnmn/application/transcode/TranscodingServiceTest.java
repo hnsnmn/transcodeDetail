@@ -60,7 +60,7 @@ public class TranscodingServiceTest {
 	@Before
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
-				createdFileSender, jobResultNotifier, jobStateChnager, transcodingExceptionHandler, jobRepository);
+				createdFileSender, jobResultNotifier, jobRepository);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
