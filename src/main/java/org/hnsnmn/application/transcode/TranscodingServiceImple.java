@@ -1,9 +1,7 @@
 package org.hnsnmn.application.transcode;
 
-import java.io.File;
-import java.util.List;
-
-import static org.hnsnmn.domain.job.Job.State;
+import org.hnsnmn.domain.job.Job;
+import org.hnsnmn.domain.job.JobRepository;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,10 +19,12 @@ public class TranscodingServiceImple implements TranscodingService {
 
 	private JobStateChnager jobStateChanger;
 	private TranscodingExceptionHandler transcodingExceptionHandler;
+	private JobRepository jobRepository;
 
 	public TranscodingServiceImple(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
 								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
-								   JobResultNotifier jobResultNotifier, JobStateChnager jobStateChanger, TranscodingExceptionHandler transcodingExceptionHandler) {
+								   JobResultNotifier jobResultNotifier, JobStateChnager jobStateChanger, TranscodingExceptionHandler transcodingExceptionHandler,
+								   JobRepository jobRepository) {
 		this.mediaSourceCopier = mediaSourceCopier;
 		this.transcoder = transcoder;
 		this.thumbnailExtractor = thumbnailExtractor;
@@ -32,84 +32,13 @@ public class TranscodingServiceImple implements TranscodingService {
 		this.jobResultNotifier = jobResultNotifier;
 		this.jobStateChanger = jobStateChanger;
 		this.transcodingExceptionHandler = transcodingExceptionHandler;
+		this.jobRepository = jobRepository;
 	}
 
+	@Override
 	public void transcode(Long jobId) {
-		changeJobState(jobId, State.MEDIASOURCECOPYING);
-
-		// 미디어 원본으로부터 파일을 로컬에 복사한다.
-		File multimediaFile = copyMultimediaSourceToLocal(jobId);
-
-		changeJobState(jobId, State.TRANSCODING);
-
-		// 로컬에 복사된 파일을 변환처리 한다.
-		List<File> multimediaFiles = transcode(multimediaFile, jobId);
-
-		changeJobState(jobId, State.EXTRACTINGTHUMBNAIL);
-
-		// 로컬에 복사된 파일로부터 이미지를 추출한다.
-		List<File> thumbnails = extractThumbnail(multimediaFile, jobId);
-
-		changeJobState(jobId, State.SENDING);
-
-		// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
-		sendCreatedFileToDestination(multimediaFiles, thumbnails, jobId);
-
-		changeJobState(jobId, State.NOTIFYING);
-
-		// 결과를 통지
-		notifyJobResultToRequester(jobId);
-
-		changeJobState(jobId, State.COMPLETED);
-	}
-
-	private void changeJobState(Long jobId, State newJobState) {
-		jobStateChanger.changeJobState(jobId, newJobState);
-	}
-
-
-	private File copyMultimediaSourceToLocal(Long jobId) {
-		try {
-			return mediaSourceCopier.copy(jobId);
-		} catch (RuntimeException ex) {
-			transcodingExceptionHandler.notifyToJob(jobId, ex);
-			throw ex;
-		}
-	}
-
-	private List<File> transcode(File multimediaFile, Long jobId) {
-		try {
-			return transcoder.transcode(multimediaFile, jobId);
-		} catch (RuntimeException ex) {
-			transcodingExceptionHandler.notifyToJob(jobId, ex);
-			throw ex;
-		}
-	}
-
-	private List<File> extractThumbnail(File multimediaFile, Long jobId) {
-		try {
-			return thumbnailExtractor.extract(multimediaFile, jobId);
-		} catch (RuntimeException ex) {
-			transcodingExceptionHandler.notifyToJob(jobId, ex);
-			throw ex;
-		}
-	}
-
-	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, Long jobId) {
-		try {
-			createdFileSender.send(multimediaFiles, thumbnails, jobId);
-		} catch (RuntimeException ex) {
-			transcodingExceptionHandler.notifyToJob(jobId, ex);
-			throw ex;
-		}
-	}
-
-	private void notifyJobResultToRequester(Long jobId) {
-		try {
-			jobResultNotifier.notifyToRequester(jobId);
-		} catch (RuntimeException ex) {
-			transcodingExceptionHandler.notifyToJob(jobId, ex);
-			throw ex;
-		}
+		Job job = jobRepository.findById(jobId);
+		job.transcode(mediaSourceCopier, transcoder, thumbnailExtractor,
+				createdFileSender, jobResultNotifier);
 	}
 }
