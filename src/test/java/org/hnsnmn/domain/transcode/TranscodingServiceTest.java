@@ -77,11 +77,16 @@ public class TranscodingServiceTest {
 		List<File> mockThumbnails = new ArrayList<File>();
 		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
 
+		Job job = jobRepository.findById(jobId);
+		assertTrue(job.isWaiting());
+
 		transcodingService.transcode(jobId);
 
-		Job job = jobRepository.findById(jobId);
+		job = jobRepository.findById(jobId);
+		assertTrue(job.isFinished());
 		assertTrue(job.isSuccess());
 		assertEquals(Job.State.COMPLETED, job.getLastState());
+		assertNull(job.getOccurredException());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
