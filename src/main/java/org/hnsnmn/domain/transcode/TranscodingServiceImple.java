@@ -1,9 +1,9 @@
 package org.hnsnmn.domain.transcode;
 
-import org.hnsnmn.domain.job.Job;
-
 import java.io.File;
 import java.util.List;
+
+import static org.hnsnmn.domain.job.Job.State;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,12 +35,12 @@ public class TranscodingServiceImple implements TranscodingService {
 	}
 
 	public void transcode(Long jobId) {
-		changeJobState(jobId, Job.State.MEDIASOURCECOPYING);
+		changeJobState(jobId, State.MEDIASOURCECOPYING);
 
 		// 미디어 원본으로부터 파일을 로컬에 복사한다.
 		File multimediaFile = copyMultimediaSourceToLocal(jobId);
 
-		changeJobState(jobId, Job.State.TRANSCODING);
+		changeJobState(jobId, State.TRANSCODING);
 
 		// 로컬에 복사된 파일을 변환처리 한다.
 		List<File> multimediaFiles = transcode(multimediaFile, jobId);
@@ -54,10 +54,10 @@ public class TranscodingServiceImple implements TranscodingService {
 		// 결과를 통지
 		notifyJobResultToRequester(jobId);
 
-		changeJobState(jobId, Job.State.COMPLETED);
+		changeJobState(jobId, State.COMPLETED);
 	}
 
-	private void changeJobState(Long jobId, Job.State newJobState) {
+	private void changeJobState(Long jobId, State newJobState) {
 		jobStateChanger.changeJobState(jobId, newJobState);
 	}
 
