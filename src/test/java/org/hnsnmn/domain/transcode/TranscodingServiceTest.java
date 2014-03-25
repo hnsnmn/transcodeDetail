@@ -108,17 +108,8 @@ public class TranscodingServiceTest {
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
-		try {
-			transcodingService.transcode(jobId);
-			fail("발생해야 함");
-		} catch (Exception ex) {
-			assertSame(mockException, ex);
-		}
 
-		Job job = jobRepository.findById(jobId);
-		assertTrue(job.isFinished());
-		assertFalse(job.isSuccess());
-		assertEquals(Job.State.MEDIASOURCECOPYING, job.getLastState());
+		executeFaillingTranscodeAndAssertFail(Job.State.MEDIASOURCECOPYING);
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, never()).transcode(any(File.class), anyLong());
@@ -131,6 +122,16 @@ public class TranscodingServiceTest {
 	public void transcodeFailBecauseExceptionOccuredAtTranscoder() {
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenThrow(mockException);
 
+		executeFaillingTranscodeAndAssertFail(Job.State.TRANSCODING);
+
+		verify(mediaSourceCopier, only()).copy(jobId);
+		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
+		verify(thumbnailExtractor, never()).extract(any(File.class), anyLong());
+		verify(createdFileSender, never()).send(anyListOf(File.class), anyListOf(File.class), anyLong());
+		verify(jobResultNotifier, never()).notifyToRequester(anyLong());
+	}
+
+	private void executeFaillingTranscodeAndAssertFail(Job.State expectedLastState) {
 		try {
 			transcodingService.transcode(jobId);
 			fail("발생해야 함");
@@ -139,17 +140,10 @@ public class TranscodingServiceTest {
 		}
 
 		Job job = jobRepository.findById(jobId);
-
 		assertTrue(job.isFinished());
 		assertFalse(job.isSuccess());
-		assertEquals(Job.State.TRANSCODING, job.getLastState());
+		assertEquals(expectedLastState, job.getLastState());
 		assertNotNull(job.getOccurredException());
-
-		verify(mediaSourceCopier, only()).copy(jobId);
-		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
-		verify(thumbnailExtractor, never()).extract(any(File.class), anyLong());
-		verify(createdFileSender, never()).send(anyListOf(File.class), anyListOf(File.class), anyLong());
-		verify(jobResultNotifier, never()).notifyToRequester(anyLong());
 	}
 
 }
