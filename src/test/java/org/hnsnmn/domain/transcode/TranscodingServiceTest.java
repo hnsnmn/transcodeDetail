@@ -156,6 +156,18 @@ public class TranscodingServiceTest {
 		verifyCollaboration(verifyOption);
 	}
 
+	@Test
+	public void transcodeFailBecauseExceptionOccuredAtThumbnailExtractor() {
+		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenThrow(mockException);
+
+		executeFaillingTranscodeAndAssertFail(State.EXTRACTINGTHUMBNAIL);
+
+		VerifyOption verifyOption = new VerifyOption();
+		verifyOption.createdFileSenderNever = true;
+		verifyOption.jobResultNotifierNever = true;
+		verifyCollaboration(verifyOption);
+	}
+
 	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
 		try {
 			transcodingService.transcode(jobId);
