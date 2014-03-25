@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,22 +38,35 @@ public class TranscodingServiceTest {
 	private CreatedFileSender createdFileSender;
 	@Mock
 	private JobResultNotifier jobResultNotifier;
-
-	private TranscodingService transcodingService;
-	private final Long jobId = new Long(1);
-
+	@Mock
+	private JobStateChnager jobStateChnager;
 	@Mock
 	private JobRepository jobRepository;
+
+	private TranscodingService transcodingService;
+
+	private final Long jobId = new Long(1);
+
+	private Job mockJob = new Job();
 
 	@Before
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
-				createdFileSender, jobResultNotifier);
+				createdFileSender, jobResultNotifier, jobStateChnager);
+
+		doAnswer(new Answer() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Job.State newState = (Job.State) invocation.getArguments()[1];
+				mockJob.changeState(newState);
+				return null;
+			}
+		}).when(jobStateChnager).changeJobState(anyLong(), any(Job.State.class));
 	}
 
 	@Test
 	public void transcodeSuccessfully() {
-		when(jobRepository.findById(jobId)).thenReturn(new Job());
+		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 
 		File mockMultimediaFile = mock(File.class);
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
@@ -66,7 +81,7 @@ public class TranscodingServiceTest {
 
 		Job job = jobRepository.findById(jobId);
 		assertTrue(job.isSuccess());
-		assertEquals(Job.State.COMPLETED, job.isLastState());
+		assertEquals(Job.State.COMPLETED, job.getLastState());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
@@ -77,7 +92,7 @@ public class TranscodingServiceTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
-		when(jobRepository.findById(jobId)).thenReturn(new Job());
+		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 
 		RuntimeException mockException = new RuntimeException();
 		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
@@ -90,7 +105,7 @@ public class TranscodingServiceTest {
 
 		Job job = jobRepository.findById(jobId);
 		assertFalse(job.isSuccess());
-		assertEquals(Job.State.MEDIASOURCECOPYING, job.isLastState());
+		assertEquals(Job.State.MEDIASOURCECOPYING, job.getLastState());
 
 		verify(mediaSourceCopier, only()).copy(jobId);
 		verify(transcoder, never()).transcode(any(File.class), anyLong());
