@@ -20,6 +20,7 @@ public class TranscodingServiceImple implements TranscodingService {
 	private final JobResultNotifier jobResultNotifier;
 
 	private JobStateChnager jobStateChanger;
+	private TranscodingExceptionHandler transcodingExceptionHandler;
 
 	public TranscodingServiceImple(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
 								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
@@ -59,22 +60,47 @@ public class TranscodingServiceImple implements TranscodingService {
 
 
 	private File copyMultimediaSourceToLocal(Long jobId) {
-		return mediaSourceCopier.copy(jobId);
+		try {
+			return mediaSourceCopier.copy(jobId);
+		} catch (RuntimeException ex) {
+			transcodingExceptionHandler.notifyToJob(jobId, ex);
+			throw ex;
+		}
 	}
 
 	private List<File> transcode(File multimediaFile, Long jobId) {
-		return transcoder.transcode(multimediaFile, jobId);
+		try {
+			return transcoder.transcode(multimediaFile, jobId);
+		} catch (RuntimeException ex) {
+			transcodingExceptionHandler.notifyToJob(jobId, ex);
+			throw ex;
+		}
 	}
 
 	private List<File> extractThumbnail(File multimediaFile, Long jobId) {
-		return thumbnailExtractor.extract(multimediaFile, jobId);
+		try {
+			return thumbnailExtractor.extract(multimediaFile, jobId);
+		} catch (RuntimeException ex) {
+			transcodingExceptionHandler.notifyToJob(jobId, ex);
+			throw ex;
+		}
 	}
 
 	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, Long jobId) {
-		createdFileSender.send(multimediaFiles, thumbnails, jobId);
+		try {
+			createdFileSender.send(multimediaFiles, thumbnails, jobId);
+		} catch (RuntimeException ex) {
+			transcodingExceptionHandler.notifyToJob(jobId, ex);
+			throw ex;
+		}
 	}
 
 	private void notifyJobResultToRequester(Long jobId) {
-		jobResultNotifier.notifyToRequester(jobId);
+		try {
+			jobResultNotifier.notifyToRequester(jobId);
+		} catch (RuntimeException ex) {
+			transcodingExceptionHandler.notifyToJob(jobId, ex);
+			throw ex;
+		}
 	}
 }
