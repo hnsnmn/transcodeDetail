@@ -9,6 +9,7 @@ package org.hnsnmn.domain.job;
  */
 public class Job {
 	private State state;
+	private RuntimeException occurredException;
 
 	public boolean isSuccess() {
 		return state == State.COMPLETED;
@@ -21,6 +22,23 @@ public class Job {
 	public void changeState(State newState) {
 		this.state = newState;
 	}
+
+	public boolean isWaiting() {
+		return state == null;
+	}
+
+	public boolean isFinished() {
+		return isSuccess() || isExceptionOccurred();
+	}
+
+	private boolean isExceptionOccurred() {
+		return occurredException != null;
+	}
+
+	public Exception getOccurredException() {
+		return occurredException;
+	}
+
 
 	public enum State {
 		COMPLETED, MEDIASOURCECOPYING
