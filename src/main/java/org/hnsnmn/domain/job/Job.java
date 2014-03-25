@@ -12,11 +12,11 @@ public class Job {
 
 	public enum State {
 		COMPLETED, MEDIASOURCECOPYING;
+
 	}
-
 	private State state;
-	private Exception occurredException;
 
+	private Exception occurredException;
 	public boolean isSuccess() {
 		return state == State.COMPLETED;
 	}
@@ -41,8 +41,12 @@ public class Job {
 		return occurredException != null;
 	}
 
-
 	public Exception getOccurredException() {
 		return occurredException;
+	}
+
+
+	public void exceptionOccurred(RuntimeException ex) {
+		this.occurredException = ex;
 	}
 }
