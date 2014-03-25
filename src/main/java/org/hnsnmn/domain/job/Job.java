@@ -11,7 +11,7 @@ public class Job {
 
 
 	public enum State {
-		COMPLETED, MEDIASOURCECOPYING;
+		COMPLETED, MEDIASOURCECOPYING, TRANSCODING;
 
 	}
 	private State state;
