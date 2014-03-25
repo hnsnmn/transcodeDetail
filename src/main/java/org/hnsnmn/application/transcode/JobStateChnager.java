@@ -1,4 +1,4 @@
-package org.hnsnmn.domain.transcode;
+package org.hnsnmn.application.transcode;
 
 import org.hnsnmn.domain.job.Job;
 

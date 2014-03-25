@@ -1,4 +1,4 @@
-package org.hnsnmn.domain.transcode;
+package org.hnsnmn.application.transcode;
 
 /**
  * Created with IntelliJ IDEA.
