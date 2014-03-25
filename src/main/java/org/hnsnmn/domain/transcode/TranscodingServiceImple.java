@@ -24,13 +24,14 @@ public class TranscodingServiceImple implements TranscodingService {
 
 	public TranscodingServiceImple(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
 								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
-								   JobResultNotifier jobResultNotifier, JobStateChnager jobStateChanger) {
+								   JobResultNotifier jobResultNotifier, JobStateChnager jobStateChanger, TranscodingExceptionHandler transcodingExceptionHandler) {
 		this.mediaSourceCopier = mediaSourceCopier;
 		this.transcoder = transcoder;
 		this.thumbnailExtractor = thumbnailExtractor;
 		this.createdFileSender = createdFileSender;
 		this.jobResultNotifier = jobResultNotifier;
 		this.jobStateChanger = jobStateChanger;
+		this.transcodingExceptionHandler = transcodingExceptionHandler;
 	}
 
 	public void transcode(Long jobId) {
