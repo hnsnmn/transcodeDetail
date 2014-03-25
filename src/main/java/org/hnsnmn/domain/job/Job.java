@@ -35,7 +35,7 @@ public class Job {
 		return state;
 	}
 
-	public void changeState(State newState) {
+	private void changeState(State newState) {
 		this.state = newState;
 	}
 
@@ -56,7 +56,7 @@ public class Job {
 	}
 
 
-	public void exceptionOccurred(RuntimeException ex) {
+	private void exceptionOccurred(RuntimeException ex) {
 		this.occurredException = ex;
 	}
 
