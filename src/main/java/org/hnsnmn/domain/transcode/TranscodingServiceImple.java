@@ -1,5 +1,7 @@
 package org.hnsnmn.domain.transcode;
 
+import org.hnsnmn.domain.job.Job;
+
 import java.io.File;
 import java.util.List;
 
@@ -17,17 +19,22 @@ public class TranscodingServiceImple implements TranscodingService {
 	private final CreatedFileSender createdFileSender;
 	private final JobResultNotifier jobResultNotifier;
 
+	private JobStateChnager jobStateChanger;
+
 	public TranscodingServiceImple(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
 								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
-								   JobResultNotifier jobResultNotifier) {
+								   JobResultNotifier jobResultNotifier, JobStateChnager jobStateChanger) {
 		this.mediaSourceCopier = mediaSourceCopier;
 		this.transcoder = transcoder;
 		this.thumbnailExtractor = thumbnailExtractor;
 		this.createdFileSender = createdFileSender;
 		this.jobResultNotifier = jobResultNotifier;
+		this.jobStateChanger = jobStateChanger;
 	}
 
 	public void transcode(Long jobId) {
+		changeJobState(jobId, Job.State.MEDIASOURCECOPYING);
+
 		// 미디어 원본으로부터 파일을 로컬에 복사한다.
 		File multimediaFile = copyMultimediaSourceToLocal(jobId);
 
@@ -42,6 +49,12 @@ public class TranscodingServiceImple implements TranscodingService {
 
 		// 결과를 통지
 		notifyJobResultToRequester(jobId);
+
+		changeJobState(jobId, Job.State.COMPLETED);
+	}
+
+	private void changeJobState(Long jobId, Job.State newJobState) {
+		jobStateChanger.changeJobState(jobId, newJobState);
 	}
 
 
