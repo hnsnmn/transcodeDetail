@@ -40,6 +40,8 @@ public class TranscodingServiceImple implements TranscodingService {
 		// 미디어 원본으로부터 파일을 로컬에 복사한다.
 		File multimediaFile = copyMultimediaSourceToLocal(jobId);
 
+		changeJobState(jobId, Job.State.TRANSCODING);
+
 		// 로컬에 복사된 파일을 변환처리 한다.
 		List<File> multimediaFiles = transcode(multimediaFile, jobId);
 
