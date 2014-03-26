@@ -160,7 +160,7 @@ public class TranscodingServiceTest {
 		assertNotNull(job.getOccurredException());
 	}
 
-	public class CollaborationVerifier {
+	private class CollaborationVerifier {
 		public boolean transcoderNever;
 		public boolean thumbnailExtractorNever;
 		public boolean destinationStorageNever;
