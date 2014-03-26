@@ -66,57 +66,55 @@ public class Job {
 						  ThumbnailExtractor thumbnailExtractor,
 						  JobResultNotifier jobResultNotifier) {
 		try {
-			changeState(State.MEDIASOURCECOPYING);
 
 			// 미디어 원본으로부터 파일을 로컬에 복사한다.
 			File multimediaFile = copyMultimediaSourceToLocal();
 
-			changeState(State.TRANSCODING);
-
 			// 로컬에 복사된 파일을 변환처리 한다.
 			List<File> multimediaFiles = transcode(multimediaFile, transcoder);
-
-			changeState(State.EXTRACTINGTHUMBNAIL);
 
 			// 로컬에 복사된 파일로부터 이미지를 추출한다.
 			List<File> thumbnails = extractThumbnail(multimediaFile, thumbnailExtractor);
 
-			changeState(State.SENDING);
-
 			// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
 			sendCreatedFileToDestination(multimediaFiles, thumbnails);
 
-			changeState(State.NOTIFYING);
-
 			// 결과를 통지
 			notifyJobResultToRequester(jobResultNotifier);
-
-			changeState(State.COMPLETED);
+			completed();
 		} catch (RuntimeException ex) {
 			exceptionOccurred(ex);
 			throw ex;
 		}
 	}
 
-
 	private File copyMultimediaSourceToLocal() {
+		changeState(State.MEDIASOURCECOPYING);
 		return mediaSourceFile.getSourceFile();
 	}
 
+
 	private List<File> transcode(File multimediaFile, Transcoder transcoder) {
+		changeState(State.TRANSCODING);
 		return transcoder.transcode(multimediaFile, id);
 	}
 
 	private List<File> extractThumbnail(File multimediaFile, ThumbnailExtractor thumbnailExtractor) {
+		changeState(State.EXTRACTINGTHUMBNAIL);
 		return thumbnailExtractor.extract(multimediaFile, id);
 	}
 
 	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails) {
+		changeState(State.SENDING);
 		destinationStorage.save(multimediaFiles, thumbnails);
-		//createdFileSender.send(multimediaFiles, thumbnails, id);
 	}
 
 	private void notifyJobResultToRequester(JobResultNotifier jobResultNotifier) {
+		changeState(State.NOTIFYING);
 		jobResultNotifier.notifyToRequester(id);
+	}
+
+	private void completed() {
+		changeState(State.COMPLETED);
 	}
 }
