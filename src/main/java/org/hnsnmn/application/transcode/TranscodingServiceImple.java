@@ -12,17 +12,15 @@ import org.hnsnmn.domain.job.*;
 public class TranscodingServiceImple implements TranscodingService {
 	private final Transcoder transcoder;
 	private final ThumbnailExtractor thumbnailExtractor;
-	private final CreatedFileSender createdFileSender;
 	private final JobResultNotifier jobResultNotifier;
 
 	private JobRepository jobRepository;
 
 	public TranscodingServiceImple(Transcoder transcoder,
-								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
+								   ThumbnailExtractor thumbnailExtractor,
 								   JobResultNotifier jobResultNotifier, JobRepository jobRepository) {
 		this.transcoder = transcoder;
 		this.thumbnailExtractor = thumbnailExtractor;
-		this.createdFileSender = createdFileSender;
 		this.jobResultNotifier = jobResultNotifier;
 		this.jobRepository = jobRepository;
 	}
@@ -30,7 +28,6 @@ public class TranscodingServiceImple implements TranscodingService {
 	@Override
 	public void transcode(Long jobId) {
 		Job job = jobRepository.findById(jobId);
-		job.transcode(transcoder, thumbnailExtractor,
-				createdFileSender, jobResultNotifier);
+		job.transcode(transcoder, thumbnailExtractor, jobResultNotifier);
 	}
 }

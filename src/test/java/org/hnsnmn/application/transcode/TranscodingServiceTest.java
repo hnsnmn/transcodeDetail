@@ -31,8 +31,6 @@ public class TranscodingServiceTest {
 	@Mock
 	private ThumbnailExtractor thumbnailExtractor;
 	@Mock
-	private CreatedFileSender createdFileSender;
-	@Mock
 	private JobResultNotifier jobResultNotifier;
 	@Mock
 	private JobStateChnager jobStateChnager;
@@ -58,7 +56,7 @@ public class TranscodingServiceTest {
 	@Before
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor,
-				createdFileSender, jobResultNotifier, jobRepository);
+				jobResultNotifier, jobRepository);
 
 		mockJob = new Job(jobId, mediaSourceFile, destinationStroage);
 

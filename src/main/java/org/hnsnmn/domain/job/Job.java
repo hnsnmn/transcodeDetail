@@ -63,7 +63,7 @@ public class Job {
 	}
 
 	public void transcode(Transcoder transcoder,
-						  ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
+						  ThumbnailExtractor thumbnailExtractor,
 						  JobResultNotifier jobResultNotifier) {
 		try {
 			changeState(State.MEDIASOURCECOPYING);
@@ -84,7 +84,7 @@ public class Job {
 			changeState(State.SENDING);
 
 			// 변환된 결과 파일과 썸네일 이미지를 목적지에 저장
-			sendCreatedFileToDestination(multimediaFiles, thumbnails, createdFileSender);
+			sendCreatedFileToDestination(multimediaFiles, thumbnails);
 
 			changeState(State.NOTIFYING);
 
@@ -111,7 +111,7 @@ public class Job {
 		return thumbnailExtractor.extract(multimediaFile, id);
 	}
 
-	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, CreatedFileSender createdFileSender) {
+	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails) {
 		destinationStorage.save(multimediaFiles, thumbnails);
 		//createdFileSender.send(multimediaFiles, thumbnails, id);
 	}
