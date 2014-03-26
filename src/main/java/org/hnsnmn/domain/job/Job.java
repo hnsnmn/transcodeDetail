@@ -14,10 +14,12 @@ public class Job {
 
 	private final Long id;
 	private final MediaSourceFile mediaSourceFile;
+	private final DestinationStorage destinationStorage;
 
-	public Job(Long id, MediaSourceFile mediaSourceFile) {
+	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
+		this.destinationStorage = destinationStorage;
 	}
 
 	public enum State {
