@@ -62,14 +62,14 @@ public class Job {
 		this.occurredException = ex;
 	}
 
-	public void transcode(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
+	public void transcode(Transcoder transcoder,
 						  ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
 						  JobResultNotifier jobResultNotifier) {
 		try {
 			changeState(State.MEDIASOURCECOPYING);
 
 			// 미디어 원본으로부터 파일을 로컬에 복사한다.
-			File multimediaFile = copyMultimediaSourceToLocal(mediaSourceCopier);
+			File multimediaFile = copyMultimediaSourceToLocal();
 
 			changeState(State.TRANSCODING);
 
@@ -99,8 +99,8 @@ public class Job {
 	}
 
 
-	private File copyMultimediaSourceToLocal(MediaSourceCopier mediaSourceCopier) {
-		return mediaSourceCopier.copy(id);
+	private File copyMultimediaSourceToLocal() {
+		return mediaSourceFile.getSourceFile();
 	}
 
 	private List<File> transcode(File multimediaFile, Transcoder transcoder) {

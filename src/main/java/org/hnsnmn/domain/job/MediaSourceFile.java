@@ -1,5 +1,7 @@
 package org.hnsnmn.domain.job;
 
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: hongseongmin
@@ -8,4 +10,5 @@ package org.hnsnmn.domain.job;
  * To change this template use File | Settings | File Templates.
  */
 public interface MediaSourceFile {
+	File getSourceFile();
 }
