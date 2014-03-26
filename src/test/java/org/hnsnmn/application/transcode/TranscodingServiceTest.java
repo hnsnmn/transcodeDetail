@@ -97,10 +97,10 @@ public class TranscodingServiceTest {
 		else
 			verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
 
-		if (verifyOption.createdFileSenderNever)
-			verify(createdFileSender, never()).send(mockMultimediaFiles, mockThumbnails, jobId);
+		if (verifyOption.destinationStorageNever)
+			verify(destinationStroage, never()).save(mockMultimediaFiles, mockThumbnails);
 		else
-			verify(createdFileSender, only()).send(mockMultimediaFiles, mockThumbnails, jobId);
+			verify(destinationStroage, only()).save(mockMultimediaFiles, mockThumbnails);
 
 		if (verifyOption.jobResultNotifierNever)
 			verify(jobResultNotifier, never()).notifyToRequester(jobId);
@@ -117,7 +117,7 @@ public class TranscodingServiceTest {
 		VerifyOption verifyOption = new VerifyOption();
 		verifyOption.transcoderNever = true;
 		verifyOption.thumbnailExtractorNever = true;
-		verifyOption.createdFileSenderNever = true;
+		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
 		verifyCollaboration(verifyOption);
 	}
@@ -130,7 +130,7 @@ public class TranscodingServiceTest {
 
 		VerifyOption verifyOption = new VerifyOption();
 		verifyOption.thumbnailExtractorNever = true;
-		verifyOption.createdFileSenderNever = true;
+		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
 		verifyCollaboration(verifyOption);
 	}
@@ -142,14 +142,14 @@ public class TranscodingServiceTest {
 		executeFaillingTranscodeAndAssertFail(State.EXTRACTINGTHUMBNAIL);
 
 		VerifyOption verifyOption = new VerifyOption();
-		verifyOption.createdFileSenderNever = true;
+		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
 		verifyCollaboration(verifyOption);
 	}
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtCreatedFileSender() {
-		doThrow(mockException).when(createdFileSender).send(mockMultimediaFiles, mockThumbnails, jobId);
+		doThrow(mockException).when(destinationStroage).save(mockMultimediaFiles, mockThumbnails);
 		executeFaillingTranscodeAndAssertFail(State.SENDING);
 
 		VerifyOption verifyOption = new VerifyOption();
@@ -187,7 +187,7 @@ public class TranscodingServiceTest {
 	private class VerifyOption {
 		public boolean transcoderNever;
 		public boolean thumbnailExtractorNever;
-		public boolean createdFileSenderNever;
+		public boolean destinationStorageNever;
 		public boolean jobResultNotifierNever;
 	}
 }
