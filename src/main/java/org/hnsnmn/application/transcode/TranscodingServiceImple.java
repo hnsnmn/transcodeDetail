@@ -1,7 +1,6 @@
 package org.hnsnmn.application.transcode;
 
-import org.hnsnmn.domain.job.Job;
-import org.hnsnmn.domain.job.JobRepository;
+import org.hnsnmn.domain.job.*;
 
 /**
  * Created with IntelliJ IDEA.
