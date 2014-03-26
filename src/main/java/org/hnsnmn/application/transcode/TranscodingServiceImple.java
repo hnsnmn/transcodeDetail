@@ -11,7 +11,6 @@ import org.hnsnmn.domain.job.JobRepository;
  * To change this template use File | Settings | File Templates.
  */
 public class TranscodingServiceImple implements TranscodingService {
-	private final MediaSourceCopier mediaSourceCopier;
 	private final Transcoder transcoder;
 	private final ThumbnailExtractor thumbnailExtractor;
 	private final CreatedFileSender createdFileSender;
@@ -19,10 +18,9 @@ public class TranscodingServiceImple implements TranscodingService {
 
 	private JobRepository jobRepository;
 
-	public TranscodingServiceImple(MediaSourceCopier mediaSourceCopier, Transcoder transcoder,
+	public TranscodingServiceImple(Transcoder transcoder,
 								   ThumbnailExtractor thumbnailExtractor, CreatedFileSender createdFileSender,
 								   JobResultNotifier jobResultNotifier, JobRepository jobRepository) {
-		this.mediaSourceCopier = mediaSourceCopier;
 		this.transcoder = transcoder;
 		this.thumbnailExtractor = thumbnailExtractor;
 		this.createdFileSender = createdFileSender;
@@ -33,7 +31,7 @@ public class TranscodingServiceImple implements TranscodingService {
 	@Override
 	public void transcode(Long jobId) {
 		Job job = jobRepository.findById(jobId);
-		job.transcode(mediaSourceCopier, transcoder, thumbnailExtractor,
+		job.transcode(transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier);
 	}
 }
