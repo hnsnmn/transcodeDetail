@@ -80,32 +80,10 @@ public class TranscodingServiceTest {
 		assertNull(job.getOccurredException());
 
 		VerifyOption verifyOption = new VerifyOption();
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 
 	}
 
-	private void verifyCollaboration(VerifyOption verifyOption) {
-		if (verifyOption.transcoderNever)
-			verify(transcoder, never()).transcode(mockMultimediaFile, jobId);
-		else
-			verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
-
-		if (verifyOption.thumbnailExtractorNever)
-			verify(thumbnailExtractor, never()).extract(mockMultimediaFile, jobId);
-		else
-			verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
-
-		if (verifyOption.destinationStorageNever)
-			verify(destinationStroage, never()).save(mockMultimediaFiles, mockThumbnails);
-		else
-			verify(destinationStroage, only()).save(mockMultimediaFiles, mockThumbnails);
-
-		if (verifyOption.jobResultNotifierNever)
-			verify(jobResultNotifier, never()).notifyToRequester(jobId);
-		else
-			verify(jobResultNotifier, only()).notifyToRequester(jobId);
-
-	}
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtMediaSourceFile() {
@@ -117,7 +95,7 @@ public class TranscodingServiceTest {
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 	}
 
 	@Test
@@ -130,7 +108,7 @@ public class TranscodingServiceTest {
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 	}
 
 	@Test
@@ -142,7 +120,7 @@ public class TranscodingServiceTest {
 		VerifyOption verifyOption = new VerifyOption();
 		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 	}
 
 	@Test
@@ -152,7 +130,7 @@ public class TranscodingServiceTest {
 
 		VerifyOption verifyOption = new VerifyOption();
 		verifyOption.jobResultNotifierNever = true;
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 	}
 
 	@Test
@@ -164,7 +142,7 @@ public class TranscodingServiceTest {
 		executeFaillingTranscodeAndAssertFail(State.NOTIFYING);
 
 		VerifyOption verifyOption = new VerifyOption();
-		verifyCollaboration(verifyOption);
+		verifyOption.verifyCollaboration();
 	}
 
 	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
@@ -182,10 +160,34 @@ public class TranscodingServiceTest {
 		assertNotNull(job.getOccurredException());
 	}
 
-	private class VerifyOption {
+	public class VerifyOption {
 		public boolean transcoderNever;
 		public boolean thumbnailExtractorNever;
 		public boolean destinationStorageNever;
 		public boolean jobResultNotifierNever;
+
+		public void verifyCollaboration() {
+			if (this.transcoderNever)
+				verify(transcoder, never()).transcode(mockMultimediaFile, jobId);
+			else
+				verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
+
+			if (this.thumbnailExtractorNever)
+				verify(thumbnailExtractor, never()).extract(mockMultimediaFile, jobId);
+			else
+				verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
+
+			if (this.destinationStorageNever)
+				verify(destinationStroage, never()).save(mockMultimediaFiles, mockThumbnails);
+			else
+				verify(destinationStroage, only()).save(mockMultimediaFiles, mockThumbnails);
+
+			if (this.jobResultNotifierNever)
+				verify(jobResultNotifier, never()).notifyToRequester(jobId);
+			else
+				verify(jobResultNotifier, only()).notifyToRequester(jobId);
+
+		}
+
 	}
 }
