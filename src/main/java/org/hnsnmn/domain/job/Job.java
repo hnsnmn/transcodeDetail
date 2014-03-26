@@ -112,7 +112,8 @@ public class Job {
 	}
 
 	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails, CreatedFileSender createdFileSender) {
-		createdFileSender.send(multimediaFiles, thumbnails, id);
+		destinationStorage.save(multimediaFiles, thumbnails);
+		//createdFileSender.send(multimediaFiles, thumbnails, id);
 	}
 
 	private void notifyJobResultToRequester(JobResultNotifier jobResultNotifier) {
