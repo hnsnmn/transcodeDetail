@@ -3,6 +3,7 @@ package org.hnsnmn.application.transcode;
 
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.JobRepository;
+import org.hnsnmn.domain.job.MediaSourceFile;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,12 +44,14 @@ public class TranscodingServiceTest {
 	private JobRepository jobRepository;
 	@Mock
 	private TranscodingExceptionHandler transcodingExceptionHandler;
+	@Mock
+	private MediaSourceFile mediaSourceFile;
 
 	private TranscodingService transcodingService;
 
 	private final Long jobId = new Long(1);
 
-	private Job mockJob = new Job(jobId);
+	private Job mockJob;
 
 	private final File mockMultimediaFile = mock(File.class);
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
@@ -59,6 +62,8 @@ public class TranscodingServiceTest {
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier, jobRepository);
+
+		mockJob = new Job(jobId, mediaSourceFile);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
