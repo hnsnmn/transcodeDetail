@@ -113,9 +113,8 @@ public class TranscodingServiceTest {
 	}
 
 	@Test
-	public void transcodeFailBecauseExceptionOccuredAtMediaSourceCopier() {
-		when(mediaSourceCopier.copy(jobId)).thenThrow(mockException);
-
+	public void transcodeFailBecauseExceptionOccuredAtMediaSourceFile() {
+		when(mediaSourceFile.getSourceFile()).thenThrow(mockException);
 		executeFaillingTranscodeAndAssertFail(State.MEDIASOURCECOPYING);
 
 		VerifyOption verifyOption = new VerifyOption();
