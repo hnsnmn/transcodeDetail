@@ -1,9 +1,7 @@
 package org.hnsnmn.application.transcode;
 
 
-import org.hnsnmn.domain.job.Job;
-import org.hnsnmn.domain.job.JobRepository;
-import org.hnsnmn.domain.job.MediaSourceFile;
+import org.hnsnmn.domain.job.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +26,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class TranscodingServiceTest {
 
-	@Mock
-	private MediaSourceCopier mediaSourceCopier;
 	@Mock
 	private Transcoder transcoder;
 	@Mock
