@@ -1,7 +1,5 @@
 package org.hnsnmn.domain.job;
 
-import org.hnsnmn.application.transcode.*;
-
 import java.io.File;
 import java.util.List;
 
