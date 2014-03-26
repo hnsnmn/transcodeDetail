@@ -15,9 +15,11 @@ import java.util.List;
 public class Job {
 
 	private final Long id;
+	private final MediaSourceFile mediaSourceFile;
 
-	public Job(Long id) {
+	public Job(Long id, MediaSourceFile mediaSourceFile) {
 		this.id = id;
+		this.mediaSourceFile = mediaSourceFile;
 	}
 
 	public enum State {
