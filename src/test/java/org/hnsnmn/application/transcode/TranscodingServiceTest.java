@@ -42,13 +42,14 @@ public class TranscodingServiceTest {
 	private TranscodingExceptionHandler transcodingExceptionHandler;
 	@Mock
 	private MediaSourceFile mediaSourceFile;
+	@Mock
+	private DestinationStorage destinationStroage;
 
 	private TranscodingService transcodingService;
 
 	private final Long jobId = new Long(1);
 
 	private Job mockJob;
-
 	private final File mockMultimediaFile = mock(File.class);
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
 	private final List<File> mockThumbnails = new ArrayList<File>();
@@ -59,7 +60,7 @@ public class TranscodingServiceTest {
 		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier, jobRepository);
 
-		mockJob = new Job(jobId, mediaSourceFile);
+		mockJob = new Job(jobId, mediaSourceFile, destinationStroage);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
