@@ -60,13 +60,13 @@ public class TranscodingServiceTest {
 
 	@Before
 	public void setUp() {
-		transcodingService = new TranscodingServiceImple(mediaSourceCopier, transcoder, thumbnailExtractor,
+		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor,
 				createdFileSender, jobResultNotifier, jobRepository);
 
 		mockJob = new Job(jobId, mediaSourceFile);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
-		when(mediaSourceCopier.copy(jobId)).thenReturn(mockMultimediaFile);
+		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
 		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
 		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
 	}
@@ -90,8 +90,6 @@ public class TranscodingServiceTest {
 	}
 
 	private void verifyCollaboration(VerifyOption verifyOption) {
-		verify(mediaSourceCopier, only()).copy(jobId);
-
 		if (verifyOption.transcoderNever)
 			verify(transcoder, never()).transcode(mockMultimediaFile, jobId);
 		else
