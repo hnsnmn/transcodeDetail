@@ -79,7 +79,7 @@ public class TranscodingServiceTest {
 		assertEquals(State.COMPLETED, job.getLastState());
 		assertNull(job.getOccurredException());
 
-		VerifyOption verifyOption = new VerifyOption();
+		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.verifyCollaboration();
 
 	}
@@ -90,7 +90,7 @@ public class TranscodingServiceTest {
 		when(mediaSourceFile.getSourceFile()).thenThrow(mockException);
 		executeFaillingTranscodeAndAssertFail(State.MEDIASOURCECOPYING);
 
-		VerifyOption verifyOption = new VerifyOption();
+		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.transcoderNever = true;
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
@@ -104,7 +104,7 @@ public class TranscodingServiceTest {
 
 		executeFaillingTranscodeAndAssertFail(State.TRANSCODING);
 
-		VerifyOption verifyOption = new VerifyOption();
+		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
@@ -117,7 +117,7 @@ public class TranscodingServiceTest {
 
 		executeFaillingTranscodeAndAssertFail(State.EXTRACTINGTHUMBNAIL);
 
-		VerifyOption verifyOption = new VerifyOption();
+		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.destinationStorageNever = true;
 		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
@@ -128,7 +128,7 @@ public class TranscodingServiceTest {
 		doThrow(mockException).when(destinationStroage).save(mockMultimediaFiles, mockThumbnails);
 		executeFaillingTranscodeAndAssertFail(State.SENDING);
 
-		VerifyOption verifyOption = new VerifyOption();
+		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
 	}
@@ -141,8 +141,8 @@ public class TranscodingServiceTest {
 
 		executeFaillingTranscodeAndAssertFail(State.NOTIFYING);
 
-		VerifyOption verifyOption = new VerifyOption();
-		verifyOption.verifyCollaboration();
+		CollaborationVerifier colVerifier = new CollaborationVerifier();
+		colVerifier.verifyCollaboration();
 	}
 
 	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
@@ -160,7 +160,7 @@ public class TranscodingServiceTest {
 		assertNotNull(job.getOccurredException());
 	}
 
-	public class VerifyOption {
+	public class CollaborationVerifier {
 		public boolean transcoderNever;
 		public boolean thumbnailExtractorNever;
 		public boolean destinationStorageNever;
