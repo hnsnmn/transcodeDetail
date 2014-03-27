@@ -10,12 +10,25 @@
 	<name>transcodeDetail</name>
 	<url>https://github.com/hnsnmn/transcodeDetail</url>
 
+	<repositories>
+		<repository>
+			<id>xuggle repo</id>
+			<url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+		</repository>
+	</repositories>
 	<properties>
 		<junit.version>4.8</junit.version>
 		<mockito.version>1.8.5</mockito.version>
 	</properties>
 
 	<dependencies>
+		<!-- ffmpeg -->
+		<dependency>
+			<groupId>xuggle</groupId>
+			<artifactId>xuggle-xuggler</artifactId>
+			<version>5.3</version>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
