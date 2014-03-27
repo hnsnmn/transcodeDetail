@@ -4,6 +4,7 @@ import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.Transcoder;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,10 @@ import java.util.List;
 public class FfmpegTranscoder implements Transcoder {
 	@Override
 	public List<File> transcode(File mockMultimediaFile, List<OutputFormat> outputFormats) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		List<File> results = new ArrayList<File>();
+		for (OutputFormat format : outputFormats) {
+			results.add(new File("."));
+		}
+		return results;
 	}
 }
