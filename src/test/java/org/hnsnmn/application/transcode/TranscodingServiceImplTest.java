@@ -42,11 +42,12 @@ public class TranscodingServiceImplTest {
 	private MediaSourceFile mediaSourceFile;
 	@Mock
 	private DestinationStorage destinationStroage;
+	@Mock
+	private List<OutputFormat> outputFormats;
 
 	private TranscodingService transcodingService;
 
 	private final Long jobId = new Long(1);
-
 	private Job mockJob;
 	private final File mockMultimediaFile = mock(File.class);
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
@@ -58,11 +59,11 @@ public class TranscodingServiceImplTest {
 		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor,
 				jobResultNotifier, jobRepository);
 
-		mockJob = new Job(jobId, mediaSourceFile, destinationStroage);
+		mockJob = new Job(jobId, mediaSourceFile, destinationStroage, outputFormats);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
-		when(transcoder.transcode(mockMultimediaFile, jobId)).thenReturn(mockMultimediaFiles);
+		when(transcoder.transcode(mockMultimediaFile, outputFormats)).thenReturn(mockMultimediaFiles);
 		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
 	}
 
@@ -100,7 +101,7 @@ public class TranscodingServiceImplTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtTranscoder() {
-		when(transcoder.transcode(mockMultimediaFile, jobId)).thenThrow(mockException);
+		when(transcoder.transcode(mockMultimediaFile, outputFormats)).thenThrow(mockException);
 
 		executeFaillingTranscodeAndAssertFail(State.TRANSCODING);
 
@@ -168,22 +169,22 @@ public class TranscodingServiceImplTest {
 
 		public void verifyCollaboration() {
 			if (this.transcoderNever)
-				verify(transcoder, never()).transcode(mockMultimediaFile, jobId);
+				verify(transcoder, never()).transcode(any(File.class), anyListOf(OutputFormat.class));
 			else
-				verify(transcoder, only()).transcode(mockMultimediaFile, jobId);
+				verify(transcoder, only()).transcode(mockMultimediaFile, outputFormats);
 
 			if (this.thumbnailExtractorNever)
-				verify(thumbnailExtractor, never()).extract(mockMultimediaFile, jobId);
+				verify(thumbnailExtractor, never()).extract(any(File.class), anyLong());
 			else
 				verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
 
 			if (this.destinationStorageNever)
-				verify(destinationStroage, never()).save(mockMultimediaFiles, mockThumbnails);
+				verify(destinationStroage, never()).save(anyListOf(File.class), anyListOf(File.class));
 			else
 				verify(destinationStroage, only()).save(mockMultimediaFiles, mockThumbnails);
 
 			if (this.jobResultNotifierNever)
-				verify(jobResultNotifier, never()).notifyToRequester(jobId);
+				verify(jobResultNotifier, never()).notifyToRequester(anyLong());
 			else
 				verify(jobResultNotifier, only()).notifyToRequester(jobId);
 

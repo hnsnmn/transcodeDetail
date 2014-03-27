@@ -15,11 +15,13 @@ public class Job {
 	private final Long id;
 	private final MediaSourceFile mediaSourceFile;
 	private final DestinationStorage destinationStorage;
+	private List<OutputFormat> outputformats;
 
-	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage) {
+	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
 		this.destinationStorage = destinationStorage;
+		this.outputformats = outputFormats;
 	}
 
 	public enum State {
@@ -96,7 +98,7 @@ public class Job {
 
 	private List<File> transcode(File multimediaFile, Transcoder transcoder) {
 		changeState(State.TRANSCODING);
-		return transcoder.transcode(multimediaFile, id);
+		return transcoder.transcode(multimediaFile, outputformats);
 	}
 
 	private List<File> extractThumbnail(File multimediaFile, ThumbnailExtractor thumbnailExtractor) {
