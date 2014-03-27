@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
  * To change this template use File | Settings | File Templates.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TranscodingServiceTest {
+public class TranscodingServiceImplTest {
 
 	@Mock
 	private Transcoder transcoder;
