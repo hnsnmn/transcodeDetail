@@ -1,8 +1,7 @@
-package org.hnsnmn.application.transcode;
+package org.hnsnmn.infra.ffmpeg;
 
 import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.Transcoder;
-import org.hnsnmn.infra.ffmpeg.FfmpegTranscoder;
 import org.junit.Before;
 import org.junit.Test;
 
