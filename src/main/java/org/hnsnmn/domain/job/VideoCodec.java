@@ -8,5 +8,5 @@ package org.hnsnmn.domain.job;
  * To change this template use File | Settings | File Templates.
  */
 public enum VideoCodec {
-	H264
+	MPEG4, H264
 }
