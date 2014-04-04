@@ -3,6 +3,7 @@ package org.hnsnmn.infra.ffmpeg;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.ToolFactory;
 import org.hnsnmn.domain.job.AudioCodec;
+import org.hnsnmn.domain.job.Container;
 import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.VideoCodec;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class VideoConverterTest {
 	@Test
 	public void transocde() {
 		IMediaReader reader = ToolFactory.makeReader(SOURCE_FILE);
-		OutputFormat outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, VideoCodec.H264, AudioCodec.AAC);
+		OutputFormat outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
 		VideoConverter writer = new VideoConverter(TRANSCODED_FILE, reader,
 				outputFormat);
 		reader.addListener(writer);
