@@ -21,17 +21,19 @@ import static org.junit.Assert.assertTrue;
 public class FfmpegTranscoderTest {
 
 	private Transcoder transcoder;
+	private File multimediaFile;
+	private List<OutputFormat> outputFormats;
 
 	@Before
 	public void setUp() {
 		transcoder = new FfmpegTranscoder();
+		multimediaFile = new File("src/test/resources/sample.avi");
+		outputFormats = new ArrayList<OutputFormat>();
 	}
 
 	@Test
 	public void transcodeWithOnOutputFormat() {
-		File multimediaFile = new File("src/test/resources/sample.avi");
-		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
-		outputFormats.add(new OutputFormat(640, 480, 300, Container.MP4, VideoCodec.H264, AudioCodec.AAC));
+		outputFormats.add(new OutputFormat(160, 120, 150, Container.MP4, VideoCodec.H264, AudioCodec.AAC));
 		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
 
 		assertEquals(1, transcodeFiles.size());
@@ -42,8 +44,6 @@ public class FfmpegTranscoderTest {
 
 	@Test
 	public void transcodeWithOneAviOutputFormat() {
-		File multimediaFile = new File("src/test/resources/sample.avi");
-		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
 		outputFormats.add(new OutputFormat(160, 120, 150, Container.AVI, VideoCodec.MPEG4, AudioCodec.MP3));
 		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
 
