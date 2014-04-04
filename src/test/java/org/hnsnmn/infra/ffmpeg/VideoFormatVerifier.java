@@ -40,12 +40,25 @@ public class VideoFormatVerifier {
 
 	private void verify() {
 		try {
+			assertExtension();
 			makeContainer();
 			extractMetaInfoOfVideo();
 			assertVideFile();
 		} finally {
 			closeContainer();
 		}
+	}
+
+	private void assertExtension() {
+		assertEquals(expectedFormat.getFileExtenstion(), fileExtenstion());
+	}
+
+
+	private String fileExtenstion() {
+		String filePath = videoFile.getAbsolutePath();
+		int lastDotIdx = filePath.lastIndexOf(".");
+		String extenstion = filePath.substring(lastDotIdx + 1);
+		return extenstion;
 	}
 
 	private void makeContainer() {
