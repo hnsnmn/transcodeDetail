@@ -7,6 +7,8 @@ import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.VideoCodec;
 import org.junit.Test;
 
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: hongseongmin
@@ -33,5 +35,7 @@ public class VideoConverterTest {
 			do {
 			} while (false);
 		}
+
+		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File(TRANSCODED_FILE));
 	}
 }
