@@ -2,7 +2,9 @@ package org.hnsnmn.infra.ffmpeg;
 
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.ToolFactory;
+import org.hnsnmn.domain.job.AudioCodec;
 import org.hnsnmn.domain.job.OutputFormat;
+import org.hnsnmn.domain.job.VideoCodec;
 import org.junit.Test;
 
 /**
@@ -14,12 +16,17 @@ import org.junit.Test;
  */
 public class VideoConverterTest {
 
+	private static final int WIDTH = 160;
+	private static final int HEIGHT = 120;
+	private static final int BITRATE = 150;
+	private static final String SOURCE_FILE = "src/test/resources/sample.avi";
+	private static final String TRANSCODED_FILE = "target/sample.mp4";
+
 	@Test
 	public void transocde() {
-		IMediaReader reader = ToolFactory
-				.makeReader("src/test/resources/sample.avi");
-		OutputFormat outputFormat = new OutputFormat(160, 120, 150, "h264", "aac");
-		VideoConverter writer = new VideoConverter("target/sample.mp4", reader,
+		IMediaReader reader = ToolFactory.makeReader(SOURCE_FILE);
+		OutputFormat outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, VideoCodec.H264, AudioCodec.AAC);
+		VideoConverter writer = new VideoConverter(TRANSCODED_FILE, reader,
 				outputFormat);
 		reader.addListener(writer);
 		while (reader.readPacket() == null) {

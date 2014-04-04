@@ -4,8 +4,10 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
+import org.hnsnmn.domain.job.AudioCodec;
 import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.Transcoder;
+import org.hnsnmn.domain.job.VideoCodec;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +38,7 @@ public class FfmpegTranscoderTest {
 	public void transcodeWithOnOutputFormat() {
 		File multimediaFile = new File("src/test/resources/sample.avi");
 		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
-		outputFormats.add(new OutputFormat(640, 480, 300, "h264", "aac"));
+		outputFormats.add(new OutputFormat(640, 480, 300, VideoCodec.H264, AudioCodec.AAC));
 		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
 
 		assertEquals(1, transcodeFiles.size());
@@ -73,7 +75,7 @@ public class FfmpegTranscoderTest {
 
 		assertEquals(outputFormat.getWidth(), width);
 		assertEquals(outputFormat.getHeight(), height);
-		assertEquals(outputFormat.getVideoFormat(), videoCodec.toString());
-		assertEquals(outputFormat.getAudioFormat(), audioCodec.toString());
+		assertEquals(outputFormat.getVideoCodec(), videoCodec.toString());
+		assertEquals(outputFormat.getAudioCodec(), audioCodec.toString());
 	}
 }
