@@ -41,4 +41,8 @@ public class OutputFormat {
 	public int getBitrate() {
 		return bitrate;
 	}
+
+	public String getFileExtenstion() {
+		return null;  //To change body of created methods use File | Settings | File Templates.
+	}
 }
