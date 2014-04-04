@@ -43,6 +43,6 @@ public class OutputFormat {
 	}
 
 	public String getFileExtenstion() {
-		return null;  //To change body of created methods use File | Settings | File Templates.
+		return "mp4";
 	}
 }
