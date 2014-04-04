@@ -1,9 +1,6 @@
 package org.hnsnmn.infra.ffmpeg;
 
-import org.hnsnmn.domain.job.AudioCodec;
-import org.hnsnmn.domain.job.OutputFormat;
-import org.hnsnmn.domain.job.Transcoder;
-import org.hnsnmn.domain.job.VideoCodec;
+import org.hnsnmn.domain.job.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,12 +31,26 @@ public class FfmpegTranscoderTest {
 	public void transcodeWithOnOutputFormat() {
 		File multimediaFile = new File("src/test/resources/sample.avi");
 		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
-		outputFormats.add(new OutputFormat(640, 480, 300, VideoCodec.H264, AudioCodec.AAC));
+		outputFormats.add(new OutputFormat(640, 480, 300, Container.MP4, VideoCodec.H264, AudioCodec.AAC));
 		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
 
 		assertEquals(1, transcodeFiles.size());
 		assertTrue(transcodeFiles.get(0).exists());
 
 		VideoFormatVerifier.verifyVideoFormat(outputFormats.get(0), transcodeFiles.get(0));
+	}
+
+	@Test
+	public void transcodeWithOneAviOutputFormat() {
+		File multimediaFile = new File("src/test/resources/sample.avi");
+		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
+		outputFormats.add(new OutputFormat(160, 120, 150, Container.AVI, VideoCodec.MPEG4, AudioCodec.MP3));
+		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
+
+		assertEquals(1, transcodeFiles.size());
+		assertTrue(transcodeFiles.get(0).exists());
+
+		VideoFormatVerifier.verifyVideoFormat(outputFormats.get(0), transcodeFiles.get(0));
+
 	}
 }
