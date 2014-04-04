@@ -19,6 +19,8 @@ public class CodecValueConverter {
 		switch (videoCodec) {
 			case H264:
 				return ICodec.ID.CODEC_ID_H264;
+			case MPEG4:
+				return ICodec.ID.CODEC_ID_MPEG4;
 		}
 		return null;
 	}
@@ -30,6 +32,8 @@ public class CodecValueConverter {
 		switch (codecId) {
 			case CODEC_ID_H264:
 				return VideoCodec.H264;
+			case CODEC_ID_MPEG4:
+				return VideoCodec.MPEG4;
 		}
 		return null;
 	}
@@ -41,6 +45,8 @@ public class CodecValueConverter {
 		switch (audioCodec) {
 			case AAC:
 				return ICodec.ID.CODEC_ID_AAC;
+			case MP3:
+				return ICodec.ID.CODEC_ID_MP3;
 		}
 		return  null;
 	}
@@ -52,6 +58,8 @@ public class CodecValueConverter {
 		switch (codecId) {
 			case CODEC_ID_AAC:
 				return AudioCodec.AAC;
+			case CODEC_ID_MP3:
+				return AudioCodec.MP3;
 		}
 		return null;
 	}
