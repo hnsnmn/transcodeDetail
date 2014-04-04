@@ -8,11 +8,12 @@ package org.hnsnmn.domain.job;
  * To change this template use File | Settings | File Templates.
  */
 public enum Container {
-	MP4(VideoCodec.H264, AudioCodec.AAC, "mp4");
+	MP4(VideoCodec.H264, AudioCodec.AAC, "mp4"),
+	AVI(VideoCodec.MPEG4, AudioCodec.MP3, "avi");
 
 	private final VideoCodec defaultVideoCodec;
 	private final AudioCodec defaultAudioCodec;
-	private final String fileExtenstion;
+	private String fileExtenstion;
 
 
 	private Container(VideoCodec defaultVideoCodec, AudioCodec defaultAudioCodec, String fileExtenstion) {
