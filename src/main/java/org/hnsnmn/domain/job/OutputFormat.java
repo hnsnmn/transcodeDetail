@@ -11,10 +11,10 @@ public class OutputFormat {
 	private int width;
 	private int height;
 	private int bitrate;
-	private String videoCodec;
-	private String audioCodec;
+	private VideoCodec videoCodec;
+	private AudioCodec audioCodec;
 
-	public OutputFormat(int width, int height, int bitrate, String videoCodec, String audioCodec) {
+	public OutputFormat(int width, int height, int bitrate, VideoCodec videoCodec, AudioCodec audioCodec) {
 		this.width = width;
 		this.height = height;
 		this.bitrate = bitrate;
@@ -30,11 +30,11 @@ public class OutputFormat {
 		return height;
 	}
 
-	public String getVideoCodec() {
+	public VideoCodec getVideoCodec() {
 		return videoCodec;
 	}
 
-	public String getAudioCodec() {
+	public AudioCodec getAudioCodec() {
 		return audioCodec;
 	}
 
