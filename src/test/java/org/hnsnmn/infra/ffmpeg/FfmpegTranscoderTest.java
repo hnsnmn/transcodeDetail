@@ -1,9 +1,5 @@
 package org.hnsnmn.infra.ffmpeg;
 
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IContainer;
-import com.xuggle.xuggler.IStream;
-import com.xuggle.xuggler.IStreamCoder;
 import org.hnsnmn.domain.job.AudioCodec;
 import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.Transcoder;
@@ -43,39 +39,7 @@ public class FfmpegTranscoderTest {
 
 		assertEquals(1, transcodeFiles.size());
 		assertTrue(transcodeFiles.get(0).exists());
-		verifyTranscodedFile(outputFormats.get(0), transcodeFiles.get(0));
-	}
 
-	private void verifyTranscodedFile(OutputFormat outputFormat, File file) {
-		IContainer container = IContainer.make();
-		int openResult = container.open(file.getAbsolutePath(), IContainer.Type.READ, null);
-		if (openResult < 0) {
-			throw new RuntimeException("Xuggler file open failed:" + openResult);
-		}
-		int numStreams = container.getNumStreams();
-
-		int width = 0;
-		int height = 0;
-		ICodec.ID videoCodec = null;
-		ICodec.ID audioCodec = null;
-
-		for (int i = 0; i < numStreams; i++) {
-			IStream stream = container.getStream(i);
-			IStreamCoder coder = stream.getStreamCoder();
-
-			if (coder.getCodecType() == ICodec.Type.CODEC_TYPE_AUDIO) {
-				audioCodec = coder.getCodecID();
-			} else if (coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
-				videoCodec = coder.getCodecID();
-				width = coder.getWidth();
-				height = coder.getHeight();
-			}
-		}
-		container.close();
-
-		assertEquals(outputFormat.getWidth(), width);
-		assertEquals(outputFormat.getHeight(), height);
-		assertEquals(outputFormat.getVideoCodec(), videoCodec.toString());
-		assertEquals(outputFormat.getAudioCodec(), audioCodec.toString());
+		VideoFormatVerifier.verifyVideoFormat(outputFormats.get(0), transcodeFiles.get(0));
 	}
 }
