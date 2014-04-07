@@ -6,6 +6,7 @@ import org.hnsnmn.domain.job.AudioCodec;
 import org.hnsnmn.domain.job.Container;
 import org.hnsnmn.domain.job.OutputFormat;
 import org.hnsnmn.domain.job.VideoCodec;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,33 +24,40 @@ public class VideoConverterTest {
 	private static final int HEIGHT = 120;
 	private static final int BITRATE = 150;
 	private static final String SOURCE_FILE = "src/test/resources/sample.avi";
+	private IMediaReader reader;
+	private OutputFormat outputFormat;
+	private String outputFile;
+
+	@Before
+	public void setUp() throws Exception {
+		reader = ToolFactory.makeReader(SOURCE_FILE);
+	}
 
 	@Test
 	public void transocde() {
-		IMediaReader reader = ToolFactory.makeReader(SOURCE_FILE);
-		OutputFormat outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
-		VideoConverter writer = new VideoConverter("target/sample.mp4", reader,
-				outputFormat);
+		outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
+		outputFile = "target/sample.mp4";
+		VideoConverter writer = new VideoConverter(outputFile, reader, outputFormat);
 		reader.addListener(writer);
 		while (reader.readPacket() == null) {
 			do {
 			} while (false);
 		}
 
-		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File("target/sample.mp4"));
+		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File(outputFile));
 	}
 
 	@Test
 	public void transcodeWithOnlyContainer() {
-		IMediaReader reader = ToolFactory.makeReader(SOURCE_FILE);
-		OutputFormat outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.AVI);
-		VideoConverter writer = new VideoConverter("target/sample.avi", reader, outputFormat);
+		outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.AVI);
+		outputFile = "target/sample.avi";
+		VideoConverter writer = new VideoConverter(outputFile, reader, outputFormat);
 		reader.addListener(writer);
 		while (reader.readPacket() == null) {
 			do {
 			} while (false);
 		}
 
-		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File("target/sample.avi"));
+		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File(outputFile));
 	}
 }
