@@ -24,6 +24,10 @@ public class OutputFormat {
 		this.audioCodec = audioCodec;
 	}
 
+	public OutputFormat(int width, int height, int bitrate, Container avi) {
+		this(width, height, bitrate, avi, null, null);
+	}
+
 	public int getWidth() {
 		return width;
 	}
