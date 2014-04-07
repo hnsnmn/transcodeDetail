@@ -25,6 +25,7 @@ public class FfmpegTranscoderTest {
 	private List<OutputFormat> outputFormats;
 
 	private OutputFormat mp4Format;
+	private OutputFormat mp4Format2;
 	private OutputFormat aviFormat;
 
 	@Before
@@ -34,12 +35,14 @@ public class FfmpegTranscoderTest {
 		outputFormats = new ArrayList<OutputFormat>();
 
 		mp4Format = new OutputFormat(160, 120, 150, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
+		mp4Format2 = new OutputFormat(80, 60, 80, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
 		aviFormat = new OutputFormat(160, 120, 150, Container.AVI, VideoCodec.MPEG4, AudioCodec.MP3);
 	}
 
 	@Test
 	public void transcodeWithOneMp4OutputFormat() {
 		outputFormats.add(mp4Format);
+		outputFormats.add(mp4Format2);
 		executeTranscoderAndAssert();
 	}
 
@@ -53,9 +56,11 @@ public class FfmpegTranscoderTest {
 	private void executeTranscoderAndAssert() {
 		List<File> transcodeFiles = transcoder.transcode(multimediaFile, outputFormats);
 
-		assertEquals(1, transcodeFiles.size());
-		assertTrue(transcodeFiles.get(0).exists());
+		assertEquals(outputFormats.size(), transcodeFiles.size());
+		for (int i = 0; i < outputFormats.size(); i++) {
+			assertTrue(transcodeFiles.get(i).exists());
+			VideoFormatVerifier.verifyVideoFormat(outputFormats.get(i), transcodeFiles.get(i));
+		}
 
-		VideoFormatVerifier.verifyVideoFormat(outputFormats.get(0), transcodeFiles.get(0));
 	}
 }
