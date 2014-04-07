@@ -35,9 +35,21 @@ public class VideoConverterTest {
 
 	@Test
 	public void transocde() {
-		outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
-		outputFile = "target/sample.mp4";
+		Container mp4 = Container.MP4;
+		VideoCodec h264 = VideoCodec.H264;
+		AudioCodec aac = AudioCodec.AAC;
+		String s = "target/sample.mp4";
+		initOutput(mp4, h264, aac, s);
 		testVideoConverter();
+	}
+
+	private void initOutput(Container container, VideoCodec videoCodec, AudioCodec audioCodec, String outputFileName) {
+		if (videoCodec == null && audioCodec == null) {
+
+		} else {
+			outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, container, videoCodec, audioCodec);
+		}
+		outputFile = outputFileName;
 	}
 
 	private void testVideoConverter() {
