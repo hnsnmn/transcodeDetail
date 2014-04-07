@@ -37,6 +37,10 @@ public class VideoConverterTest {
 	public void transocde() {
 		outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
 		outputFile = "target/sample.mp4";
+		testVideoConverter();
+	}
+
+	private void testVideoConverter() {
 		VideoConverter writer = new VideoConverter(outputFile, reader, outputFormat);
 		reader.addListener(writer);
 		while (reader.readPacket() == null) {
@@ -51,13 +55,6 @@ public class VideoConverterTest {
 	public void transcodeWithOnlyContainer() {
 		outputFormat = new OutputFormat(WIDTH, HEIGHT, BITRATE, Container.AVI);
 		outputFile = "target/sample.avi";
-		VideoConverter writer = new VideoConverter(outputFile, reader, outputFormat);
-		reader.addListener(writer);
-		while (reader.readPacket() == null) {
-			do {
-			} while (false);
-		}
-
-		VideoFormatVerifier.verifyVideoFormat(outputFormat, new File(outputFile));
+		testVideoConverter();
 	}
 }
