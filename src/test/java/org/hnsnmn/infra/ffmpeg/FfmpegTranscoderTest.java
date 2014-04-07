@@ -3,6 +3,9 @@ package org.hnsnmn.infra.ffmpeg;
 import org.hnsnmn.domain.job.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,6 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +22,7 @@ import static org.junit.Assert.assertTrue;
  * Time: 오후 2:24
  * To change this template use File | Settings | File Templates.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class FfmpegTranscoderTest {
 
 	private Transcoder transcoder;
@@ -28,15 +33,22 @@ public class FfmpegTranscoderTest {
 	private OutputFormat mp4Format2;
 	private OutputFormat aviFormat;
 
+	@Mock
+	private NamingRule namingRule;
+
 	@Before
 	public void setUp() {
-		transcoder = new FfmpegTranscoder();
 		multimediaFile = new File("src/test/resources/sample.avi");
 		outputFormats = new ArrayList<OutputFormat>();
 
 		mp4Format = new OutputFormat(160, 120, 150, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
 		mp4Format2 = new OutputFormat(80, 60, 80, Container.MP4, VideoCodec.H264, AudioCodec.AAC);
 		aviFormat = new OutputFormat(160, 120, 150, Container.AVI, VideoCodec.MPEG4, AudioCodec.MP3);
+
+		when(namingRule.createName(mp4Format)).thenReturn("target/result.mp4");
+		when(namingRule.createName(mp4Format2)).thenReturn("target/result2.mp4");
+		when(namingRule.createName(aviFormat)).thenReturn("target/result.avi");
+		transcoder = new FfmpegTranscoder(namingRule);
 	}
 
 	@Test

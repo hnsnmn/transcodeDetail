@@ -17,6 +17,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class FfmpegTranscoder implements Transcoder {
+	private NamingRule namingRule;
+
+	public FfmpegTranscoder(NamingRule namingRule) {
+		this.namingRule = namingRule;
+	}
+
 	@Override
 	public List<File> transcode(File multimediaFile, List<OutputFormat> outputFormats) {
 		List<File> results = new ArrayList<File>();
@@ -40,6 +46,7 @@ public class FfmpegTranscoder implements Transcoder {
 	}
 
 	private String getFileName(OutputFormat format) {
-		return "outputFile." + format.getFileExtenstion();
+		return namingRule.createName(format);
+//		return "outputFile." + format.getFileExtenstion();
 	}
 }
