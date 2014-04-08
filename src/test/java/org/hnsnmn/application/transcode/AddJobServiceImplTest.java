@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -54,45 +52,4 @@ public class AddJobServiceImplTest {
 
 	}
 
-	private class AddJobRequest {
-		public String getMediaSource() {
-			return null;  //To change body of created methods use File | Settings | File Templates.
-		}
-
-		public String getDestinationStorage() {
-			return null;  //To change body of created methods use File | Settings | File Templates.
-		}
-
-		public List<OutputFormat> getOutputFormats() {
-			return null;  //To change body of created methods use File | Settings | File Templates.
-		}
-	}
-
-	private class AddJobService {
-		private final MediaSourceFileFactory mediaSourceFileFactory;
-		private final DestinationStorageFactory destinationStorageFactory;
-		private final JobRepository jobRepository;
-
-		public AddJobService(MediaSourceFileFactory mediaSourceFileFactory, DestinationStorageFactory destinationStorageFactory, JobRepository jobRepository) {
-			this.mediaSourceFileFactory = mediaSourceFileFactory;
-			this.destinationStorageFactory = destinationStorageFactory;
-			this.jobRepository = jobRepository;
-		}
-
-		public Long addJob(AddJobRequest request) {
-			Job job = createJob(request);
-			Job savedJob = saveJob(job);
-			return savedJob.getId();
-		}
-
-		private Job createJob(AddJobRequest request) {
-			MediaSourceFile mediaSourceFile = mediaSourceFileFactory.create(request.getMediaSource());
-			DestinationStorage destinationStorage = destinationStorageFactory.create(request.getDestinationStorage());
-			return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats());
-		}
-
-		private Job saveJob(Job job) {
-			return jobRepository.save(job);
-		}
-	}
 }
