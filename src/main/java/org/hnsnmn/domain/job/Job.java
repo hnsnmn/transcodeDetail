@@ -15,13 +15,17 @@ public class Job {
 	private final Long id;
 	private final MediaSourceFile mediaSourceFile;
 	private final DestinationStorage destinationStorage;
-	private List<OutputFormat> outputformats;
+	private List<OutputFormat> outputFormats;
 
 	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
 		this.destinationStorage = destinationStorage;
-		this.outputformats = outputFormats;
+		this.outputFormats = outputFormats;
+	}
+
+	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats) {
+		this(null, mediaSourceFile, destinationStorage, outputFormats);
 	}
 
 	public Long getId() {
@@ -102,7 +106,7 @@ public class Job {
 
 	private List<File> transcode(File multimediaFile, Transcoder transcoder) {
 		changeState(State.TRANSCODING);
-		return transcoder.transcode(multimediaFile, outputformats);
+		return transcoder.transcode(multimediaFile, outputFormats);
 	}
 
 	private List<File> extractThumbnail(File multimediaFile, ThumbnailExtractor thumbnailExtractor) {
