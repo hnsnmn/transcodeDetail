@@ -295,18 +295,26 @@ public class VideoConverter extends AMediaCoderMixin implements IMediaListener {
 
 	private int addAudioStream(int inputIndex, int streamId, ICodec.ID codecId,
 							   int channelCount, int sampleRate) {
-		if (codecId == null)
-			throw new IllegalArgumentException("null codecId");
+		throwExceptionWhenCodecIdIsNull(codecId);
 		ICodec codec = ICodec.findEncodingCodec(codecId);
-		if (codec == null)
-			throw new UnsupportedOperationException(
-					"cannot encode with codec: " + codecId);
+		throwExceptionWhenCodecIsNull(codecId, codec);
 		try {
 			return addAudioStream(inputIndex, streamId, codec, channelCount,
 					sampleRate);
 		} finally {
 			codec.delete();
 		}
+	}
+
+	private void throwExceptionWhenCodecIsNull(ICodec.ID codecId, ICodec codec) {
+		if (codec == null)
+			throw new UnsupportedOperationException(
+					"cannot encode with codec: " + codecId);
+	}
+
+	private void throwExceptionWhenCodecIdIsNull(ICodec.ID codecId) {
+		if (codecId == null)
+			throw new IllegalArgumentException("null codecId");
 	}
 
 	private int addAudioStream(int inputIndex, int streamId, ICodec codec,
@@ -376,12 +384,9 @@ public class VideoConverter extends AMediaCoderMixin implements IMediaListener {
 
 	private int addVideoStream(int inputIndex, int streamId, ICodec.ID codecId,
 							   IRational frameRate, int width, int height) {
-		if (codecId == null)
-			throw new IllegalArgumentException("null codecId");
+		throwExceptionWhenCodecIdIsNull(codecId);
 		ICodec codec = ICodec.findEncodingCodec(codecId);
-		if (codec == null)
-			throw new UnsupportedOperationException(
-					"cannot encode with codec: " + codecId);
+		throwExceptionWhenCodecIsNull(codecId, codec);
 		try {
 			return addVideoStream(inputIndex, streamId, codec, frameRate,
 					width, height);
