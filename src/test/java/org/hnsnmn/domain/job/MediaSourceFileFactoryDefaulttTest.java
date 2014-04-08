@@ -5,6 +5,7 @@ import org.hnsnmn.application.transcode.MediaSourceFileFactory;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,5 +23,12 @@ public class MediaSourceFileFactoryDefaulttTest {
 		assertTrue(sourceFile instanceof LocalStorageMediaSourceFile);
 		assertTrue(sourceFile.getSourceFile().exists());
 
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createNotSupportedSource() {
+		MediaSourceFileFactory factory = MediaSourceFileFactory.DEFAULT;
+		factory.create("xxx://www.daum.net");
+		fail("must throw exception");
 	}
 }
