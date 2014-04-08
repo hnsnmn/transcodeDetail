@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertTrue;
  * Time: 오후 4:46
  * To change this template use File | Settings | File Templates.
  */
-public class MediaSourceFileFactoryDefaulttest {
+public class MediaSourceFileFactoryDefaulttTest {
 	@Test
 	public void createLocalStorageMediaSourceFile() {
 		MediaSourceFileFactory factory = MediaSourceFileFactory.DEFAULT;
