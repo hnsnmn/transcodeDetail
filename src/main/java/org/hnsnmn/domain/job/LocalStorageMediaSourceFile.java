@@ -1,4 +1,4 @@
-package org.hnsnmn.application.transcode;
+package org.hnsnmn.domain.job;
 
 import org.hnsnmn.domain.job.MediaSourceFile;
 

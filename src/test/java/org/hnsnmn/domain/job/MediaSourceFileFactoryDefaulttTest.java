@@ -1,6 +1,5 @@
 package org.hnsnmn.domain.job;
 
-import org.hnsnmn.application.transcode.LocalStorageMediaSourceFile;
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
 import org.junit.Test;
 

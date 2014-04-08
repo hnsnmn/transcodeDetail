@@ -1,5 +1,6 @@
 package org.hnsnmn.application.transcode;
 
+import org.hnsnmn.domain.job.LocalStorageMediaSourceFile;
 import org.hnsnmn.domain.job.MediaSourceFile;
 
 /**
