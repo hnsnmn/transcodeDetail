@@ -24,6 +24,10 @@ public class Job {
 		this.outputformats = outputFormats;
 	}
 
+	public Long getId() {
+		return null;
+	}
+
 	public enum State {
 		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING;
 
