@@ -8,5 +8,5 @@ package org.hnsnmn.application.transcode;
  * To change this template use File | Settings | File Templates.
  */
 public interface AddJobService {
-	public Long addJob(AddJobRequest request);
+	Long addJob(AddJobRequest request);
 }
