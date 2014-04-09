@@ -16,12 +16,16 @@ public class Job {
 		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING, CREATED;
 	}
 
-	private final Long id;
-	private final MediaSourceFile mediaSourceFile;
-	private final DestinationStorage destinationStorage;
-	private final ResultCallback callback;
+	private Long id;
+	private State state;
+
+	private MediaSourceFile mediaSourceFile;
+	private DestinationStorage destinationStorage;
+
+	private ResultCallback callback;
 
 	private List<OutputFormat> outputFormats;
+
 
 	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
 		this.id = id;
@@ -29,17 +33,15 @@ public class Job {
 		this.destinationStorage = destinationStorage;
 		this.outputFormats = outputFormats;
 		this.callback = callback;
+		this.state = State.CREATED;
 	}
-
 
 	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
 		this(null, mediaSourceFile, destinationStorage, outputFormats, callback);
 	}
-
 	public Long getId() {
 		return null;
 	}
-	private State state;
 
 	private String exceptionMessage;
 
