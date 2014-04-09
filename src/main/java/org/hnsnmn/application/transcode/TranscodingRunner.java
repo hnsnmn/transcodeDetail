@@ -1,8 +1,5 @@
 package org.hnsnmn.application.transcode;
 
-import org.hnsnmn.domain.job.Job;
-import org.hnsnmn.domain.job.JobRepository;
-
 /**
 * Created with IntelliJ IDEA.
 * User: hongseongmin
@@ -12,25 +9,34 @@ import org.hnsnmn.domain.job.JobRepository;
 */
 public class TranscodingRunner {
 	private final TranscodingService transcodingService;
-	private final JobRepository jobRepository;
+	private final JobQueue jobQueue;
 
-	public TranscodingRunner(TranscodingService transcodingService, JobRepository jobRepository) {
+	public TranscodingRunner(TranscodingService transcodingService, JobQueue jobQueue) {
 		this.transcodingService = transcodingService;
-		this.jobRepository = jobRepository;
+		this.jobQueue = jobQueue;
 	}
 
 	public void run() {
-		Job job = getNextJob();
-		runTranscoding(job);
+		while (true) {
+			Long jobId = null;
+			try {
+				jobId = getNextWaitingJob();
+			} catch (JobQueue.ClosedException ex) {
+				break;
+			}
+			runTranscoding(jobId);
+		}
 	}
 
-	private Job getNextJob() {
-		return jobRepository.findEldestJobOfcreatedState();
+	private Long getNextWaitingJob() {
+		return jobQueue.nextJobId();
 	}
 
-	private void runTranscoding(Job job) {
-		if (job == null)
-			return;
-		transcodingService.transcode(job.getId());
+	private void runTranscoding(Long jobId) {
+		try {
+			transcodingService.transcode(jobId);
+		} catch (RuntimeException e) {
+
+		}
 	}
 }

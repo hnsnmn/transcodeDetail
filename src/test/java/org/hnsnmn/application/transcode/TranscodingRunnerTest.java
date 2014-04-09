@@ -4,6 +4,7 @@ package org.hnsnmn.application.transcode;
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.JobRepository;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,24 +28,27 @@ public class TranscodingRunnerTest {
 	private TranscodingService transcodingService;
 	@Mock
 	private JobRepository jobRepository;
+	@Mock
+	private JobQueue jobQueue;
 
 	private TranscodingRunner runner;
 
 	@Before
 	public void setUp() {
-		runner = new TranscodingRunner(transcodingService, jobRepository);
+		runner = new TranscodingRunner(transcodingService, jobQueue);
 	}
 
 	@Test
-	public void runTranscodingWhenSuccessfullyWhenJobIsExists() {
-		when(jobRepository.findEldestJobOfcreatedState()).thenReturn(job);
+	public void runTranscodingWhenJobQueueIsNotExists() {
 		when(job.getId()).thenReturn(1L);
+		when(jobQueue.nextJobId()).thenReturn(1L).thenThrow(new JobQueue.ClosedException());
 
 		runner.run();
 		verify(transcodingService, only()).transcode(1L);
 	}
 
 	@Test
+	@Ignore
 	public void dontRunTranscodingWhenJobIsNotExists() {
 		when(jobRepository.findEldestJobOfcreatedState()).thenReturn(null);
 		runner.run();
