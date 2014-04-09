@@ -13,7 +13,7 @@ import static junit.framework.Assert.fail;
  * Time: 오후 4:46
  * To change this template use File | Settings | File Templates.
  */
-public class MediaSourceFileFactoryDefaulttTest {
+public class MediaSourceFileFactoryDefaultTest {
 	private MediaSourceFileFactory factory = MediaSourceFileFactory.DEFAULT;
 
 	@Test

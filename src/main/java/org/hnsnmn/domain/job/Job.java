@@ -15,18 +15,21 @@ public class Job {
 	private final Long id;
 	private final MediaSourceFile mediaSourceFile;
 	private final DestinationStorage destinationStorage;
+	private final ResultCallback callback;
 	private List<OutputFormat> outputFormats;
 
-	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats) {
+	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
 		this.destinationStorage = destinationStorage;
 		this.outputFormats = outputFormats;
+		this.callback = callback;
 	}
 
-	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats) {
-		this(null, mediaSourceFile, destinationStorage, outputFormats);
+	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
+		this(null, mediaSourceFile, destinationStorage, outputFormats, callback);
 	}
+
 
 	public Long getId() {
 		return null;
@@ -39,6 +42,8 @@ public class Job {
 	private State state;
 
 	private Exception occurredException;
+	private String exceptionMessage;
+
 	public boolean isSuccess() {
 		return state == State.COMPLETED;
 	}
@@ -60,21 +65,21 @@ public class Job {
 	}
 
 	private boolean isExceptionOccurred() {
-		return occurredException != null;
+		return exceptionMessage != null;
 	}
 
-	public Exception getOccurredException() {
-		return occurredException;
+	public String getExceptionMessage() {
+		return exceptionMessage;
 	}
 
 
 	private void exceptionOccurred(RuntimeException ex) {
-		this.occurredException = ex;
+		exceptionMessage = ex.getMessage();
+		callback.notifyFailResult(id, state, exceptionMessage);
 	}
 
 	public void transcode(Transcoder transcoder,
-						  ThumbnailExtractor thumbnailExtractor,
-						  JobResultNotifier jobResultNotifier) {
+						  ThumbnailExtractor thumbnailExtractor) {
 		try {
 
 			// 미디어 원본으로부터 파일을 로컬에 복사한다.
@@ -90,7 +95,7 @@ public class Job {
 			sendCreatedFileToDestination(multimediaFiles, thumbnails);
 
 			// 결과를 통지
-			notifyJobResultToRequester(jobResultNotifier);
+			notifyJobResultToRequester();
 			completed();
 		} catch (RuntimeException ex) {
 			exceptionOccurred(ex);
@@ -119,9 +124,9 @@ public class Job {
 		destinationStorage.save(multimediaFiles, thumbnails);
 	}
 
-	private void notifyJobResultToRequester(JobResultNotifier jobResultNotifier) {
+	private void notifyJobResultToRequester() {
 		changeState(State.NOTIFYING);
-		jobResultNotifier.notifyToRequester(id);
+		callback.notifySuccessResult(id);
 	}
 
 	private void completed() {

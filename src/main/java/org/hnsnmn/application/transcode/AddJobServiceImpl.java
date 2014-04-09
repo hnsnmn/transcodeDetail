@@ -1,9 +1,6 @@
 package org.hnsnmn.application.transcode;
 
-import org.hnsnmn.domain.job.DestinationStorage;
-import org.hnsnmn.domain.job.Job;
-import org.hnsnmn.domain.job.JobRepository;
-import org.hnsnmn.domain.job.MediaSourceFile;
+import org.hnsnmn.domain.job.*;
 
 /**
 * Created with IntelliJ IDEA.
@@ -13,14 +10,19 @@ import org.hnsnmn.domain.job.MediaSourceFile;
 * To change this template use File | Settings | File Templates.
 */
 public class AddJobServiceImpl implements AddJobService {
-	private final MediaSourceFileFactory mediaSourceFileFactory;
-	private final DestinationStorageFactory destinationStorageFactory;
-	private final JobRepository jobRepository;
+	private MediaSourceFileFactory mediaSourceFileFactory;
+	private DestinationStorageFactory destinationStorageFactory;
+	private JobRepository jobRepository;
+	private ResultCallback resultCallback;
 
-	public AddJobServiceImpl(MediaSourceFileFactory mediaSourceFileFactory, DestinationStorageFactory destinationStorageFactory, JobRepository jobRepository) {
+	public AddJobServiceImpl(MediaSourceFileFactory mediaSourceFileFactory,
+							 DestinationStorageFactory destinationStorageFactory,
+							 JobRepository jobRepository,
+							 ResultCallback resultCallback) {
 		this.mediaSourceFileFactory = mediaSourceFileFactory;
 		this.destinationStorageFactory = destinationStorageFactory;
 		this.jobRepository = jobRepository;
+		this.resultCallback = resultCallback;
 	}
 
 	public Long addJob(AddJobRequest request) {
@@ -32,7 +34,7 @@ public class AddJobServiceImpl implements AddJobService {
 	private Job createJob(AddJobRequest request) {
 		MediaSourceFile mediaSourceFile = mediaSourceFileFactory.create(request.getMediaSource());
 		DestinationStorage destinationStorage = destinationStorageFactory.create(request.getDestinationStorage());
-		return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats());
+		return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats(), resultCallback);
 	}
 
 	private Job saveJob(Job job) {

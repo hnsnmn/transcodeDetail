@@ -44,9 +44,10 @@ public class TranscodingServiceImplTest {
 	private DestinationStorage destinationStroage;
 	@Mock
 	private List<OutputFormat> outputFormats;
+	@Mock
+	private ResultCallback resultCallback;
 
 	private TranscodingService transcodingService;
-
 	private final Long jobId = new Long(1);
 	private Job mockJob;
 	private final File mockMultimediaFile = mock(File.class);
@@ -56,10 +57,9 @@ public class TranscodingServiceImplTest {
 
 	@Before
 	public void setUp() {
-		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor,
-				jobResultNotifier, jobRepository);
+		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor, jobRepository);
 
-		mockJob = new Job(jobId, mediaSourceFile, destinationStroage, outputFormats);
+		mockJob = new Job(jobId, mediaSourceFile, destinationStroage, outputFormats, resultCallback);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
@@ -78,7 +78,7 @@ public class TranscodingServiceImplTest {
 		assertTrue(job.isFinished());
 		assertTrue(job.isSuccess());
 		assertEquals(State.COMPLETED, job.getLastState());
-		assertNull(job.getOccurredException());
+		assertNull(job.getExceptionMessage());
 
 		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.verifyCollaboration();
@@ -95,7 +95,6 @@ public class TranscodingServiceImplTest {
 		verifyOption.transcoderNever = true;
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
-		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
 	}
 
@@ -108,7 +107,6 @@ public class TranscodingServiceImplTest {
 		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.thumbnailExtractorNever = true;
 		verifyOption.destinationStorageNever = true;
-		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
 	}
 
@@ -120,7 +118,6 @@ public class TranscodingServiceImplTest {
 
 		CollaborationVerifier verifyOption = new CollaborationVerifier();
 		verifyOption.destinationStorageNever = true;
-		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
 	}
 
@@ -130,20 +127,7 @@ public class TranscodingServiceImplTest {
 		executeFaillingTranscodeAndAssertFail(State.SENDING);
 
 		CollaborationVerifier verifyOption = new CollaborationVerifier();
-		verifyOption.jobResultNotifierNever = true;
 		verifyOption.verifyCollaboration();
-	}
-
-	@Test
-	public void transcodeFailBecauseExceptionOccuredAtJobResultNotifier() {
-		doThrow(mockException).when(jobResultNotifier).notifyToRequester(jobId);
-		Job job = jobRepository.findById(jobId);
-		assertTrue(job.isWaiting());
-
-		executeFaillingTranscodeAndAssertFail(State.NOTIFYING);
-
-		CollaborationVerifier colVerifier = new CollaborationVerifier();
-		colVerifier.verifyCollaboration();
 	}
 
 	private void executeFaillingTranscodeAndAssertFail(State expectedLastState) {
@@ -158,14 +142,13 @@ public class TranscodingServiceImplTest {
 		assertTrue(job.isFinished());
 		assertFalse(job.isSuccess());
 		assertEquals(expectedLastState, job.getLastState());
-		assertNotNull(job.getOccurredException());
+		assertNotNull(job.getExceptionMessage());
 	}
 
 	private class CollaborationVerifier {
 		public boolean transcoderNever;
 		public boolean thumbnailExtractorNever;
 		public boolean destinationStorageNever;
-		public boolean jobResultNotifierNever;
 
 		public void verifyCollaboration() {
 			if (this.transcoderNever)
@@ -182,11 +165,6 @@ public class TranscodingServiceImplTest {
 				verify(destinationStroage, never()).save(anyListOf(File.class), anyListOf(File.class));
 			else
 				verify(destinationStroage, only()).save(mockMultimediaFiles, mockThumbnails);
-
-			if (this.jobResultNotifierNever)
-				verify(jobResultNotifier, never()).notifyToRequester(anyLong());
-			else
-				verify(jobResultNotifier, only()).notifyToRequester(jobId);
 
 		}
 
