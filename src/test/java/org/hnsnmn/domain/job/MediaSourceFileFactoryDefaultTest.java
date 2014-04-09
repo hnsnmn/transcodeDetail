@@ -14,7 +14,7 @@ import static junit.framework.Assert.fail;
  * To change this template use File | Settings | File Templates.
  */
 public class MediaSourceFileFactoryDefaultTest {
-	private MediaSourceFileFactory factory = MediaSourceFileFactory.DEFAULT;
+	private MediaSourceFileFactory factory = new DefaultMediaSourceFactory();
 
 	@Test
 	public void createLocalStorageMediaSourceFile() {
@@ -29,5 +29,16 @@ public class MediaSourceFileFactoryDefaultTest {
 	public void createNotSupportedSource() {
 		factory.create("xxx://www.daum.net");
 		fail("must throw exception");
+	}
+
+	private class DefaultMediaSourceFactory implements MediaSourceFileFactory {
+		@Override
+		public MediaSourceFile create(String mediaSource) {
+			if (mediaSource.startsWith("file://")) {
+				String filePath = mediaSource.substring("file://".length());
+				return new LocalStorageMediaSourceFile(filePath);
+			}
+			throw new IllegalArgumentException("not supported media source : " + mediaSource);
+		}
 	}
 }
