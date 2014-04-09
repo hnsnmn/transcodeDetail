@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -38,6 +39,12 @@ public class JobTest {
 	private ResultCallback callback;
 	@Mock
 	private DestinationStorage destination;
+
+	@Test
+	public void jobShouldBeCreatedStateWhenCreated() {
+		Job job = new Job(mediaSource, destination, outputFormats, callback);
+		assertEquals(Job.State.CREATED, job.getLastState());
+	}
 
 	@Test
 	public void successfully() {
