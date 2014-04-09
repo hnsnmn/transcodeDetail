@@ -1,7 +1,6 @@
 package org.hnsnmn.domain.job.mediasource;
 
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
-import org.hnsnmn.domain.job.LocalStorageMediaSourceFile;
 import org.hnsnmn.domain.job.MediaSourceFile;
 
 /**

@@ -1,4 +1,4 @@
-package org.hnsnmn.domain.job;
+package org.hnsnmn.domain.job.mediasource;
 
 import org.hnsnmn.domain.job.MediaSourceFile;
 
