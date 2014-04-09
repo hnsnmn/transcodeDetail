@@ -21,8 +21,7 @@ public class AddJobServiceImpl implements AddJobService {
 
 	public AddJobServiceImpl(MediaSourceFileFactory mediaSourceFileFactory,
 							 DestinationStorageFactory destinationStorageFactory,
-							 JobRepository jobRepository,
-							 ResultCallbackFactory resultCallbackFactory) {
+							 ResultCallbackFactory resultCallbackFactory, JobRepository jobRepository) {
 		this.mediaSourceFileFactory = mediaSourceFileFactory;
 		this.destinationStorageFactory = destinationStorageFactory;
 		this.jobRepository = jobRepository;

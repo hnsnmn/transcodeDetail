@@ -47,7 +47,7 @@ public class AddJobServiceImplTest {
 		when(mockSavedJob.getId()).thenReturn(mockJobId);
 		when(jobRepository.save(any(Job.class))).thenReturn(mockSavedJob);
 
-		AddJobService addJobServiceImpl = new AddJobServiceImpl(mediaSourceFileFactory, destinationStorageFactory, jobRepository, resultCallbackFactory);
+		AddJobService addJobServiceImpl = new AddJobServiceImpl(mediaSourceFileFactory, destinationStorageFactory, resultCallbackFactory, jobRepository);
 		Long jobId = addJobServiceImpl.addJob(request);
 
 		assertNotNull(jobId);
