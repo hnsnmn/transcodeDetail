@@ -2,6 +2,7 @@ package org.hnsnmn.domain.job;
 
 import org.hnsnmn.application.transcode.DestinationStorageFactory;
 import org.hnsnmn.domain.job.destination.DefaultDestinationStorageFactory;
+import org.hnsnmn.domain.job.destination.FileDestinationStorage;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;

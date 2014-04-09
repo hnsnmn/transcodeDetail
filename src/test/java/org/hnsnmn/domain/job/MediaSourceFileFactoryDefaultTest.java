@@ -2,6 +2,7 @@ package org.hnsnmn.domain.job;
 
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
 import org.hnsnmn.domain.job.mediasource.DefaultMediaSourceFactory;
+import org.hnsnmn.domain.job.mediasource.LocalStorageMediaSourceFile;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
