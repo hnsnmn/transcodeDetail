@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +48,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void successfully() {
+	public void transcodeSuccessfully() {
 		long jobId = 1L;
 		when(mediaSource.getSourceFile()).thenReturn(sourceFile);
 		when(transcoder.transcode(sourceFile, outputFormats)).thenReturn(
@@ -57,6 +58,7 @@ public class JobTest {
 
 		Job job = new Job(jobId, mediaSource, destination, outputFormats, callback);
 		job.transcode(transcoder, thumbnailExtractor);
+		assertEquals(Job.State.COMPLETED, job.getLastState());
 
 		verify(mediaSource, only()).getSourceFile();
 		verify(destination, only()).save(multimediafiles, thumbnails);
@@ -65,7 +67,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void failGetSourceFile() {
+	public void jobShouldThrownExceptionWhenFailGetSourceFile() {
 		long jobId = 1L;
 		RuntimeException exception = new RuntimeException("exception");
 		when(mediaSource.getSourceFile()).thenThrow(exception);
@@ -78,6 +80,8 @@ public class JobTest {
 			fail("발생해야함.");
 		} catch (Exception e) {
 		}
+		assertEquals(Job.State.MEDIASOURCECOPYING, job.getLastState());
+		assertTrue(job.isExceptionOccurred());
 
 		verify(mediaSource, only()).getSourceFile();
 		verify(destination, never()).save(multimediafiles, thumbnails);
