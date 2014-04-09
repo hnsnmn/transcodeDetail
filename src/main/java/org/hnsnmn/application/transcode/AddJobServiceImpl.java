@@ -13,24 +13,27 @@ import org.slf4j.LoggerFactory;
 */
 public class AddJobServiceImpl implements AddJobService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
 	private MediaSourceFileFactory mediaSourceFileFactory;
+
 	private DestinationStorageFactory destinationStorageFactory;
 	private JobRepository jobRepository;
 	private ResultCallbackFactory resultCallbackFactory;
+	private JobQueue jobQueue;
 
 	public AddJobServiceImpl(MediaSourceFileFactory mediaSourceFileFactory,
 							 DestinationStorageFactory destinationStorageFactory,
-							 ResultCallbackFactory resultCallbackFactory, JobRepository jobRepository) {
+							 ResultCallbackFactory resultCallbackFactory, JobRepository jobRepository, JobQueue jobQueue) {
 		this.mediaSourceFileFactory = mediaSourceFileFactory;
 		this.destinationStorageFactory = destinationStorageFactory;
 		this.jobRepository = jobRepository;
 		this.resultCallbackFactory = resultCallbackFactory;
+		this.jobQueue = jobQueue;
 	}
 
 	public Long addJob(AddJobRequest request) {
 		Job job = createJob(request);
 		Job savedJob = saveJob(job);
+		jobQueue.add(savedJob.getId());
 		return savedJob.getId();
 	}
 

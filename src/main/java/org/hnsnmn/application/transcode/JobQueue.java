@@ -10,6 +10,8 @@ package org.hnsnmn.application.transcode;
 public interface JobQueue {
 	Long nextJobId();
 
+	void add(Long jobId);
+
 	@SuppressWarnings("serial")
 	public class ClosedException extends RuntimeException {
 	}
