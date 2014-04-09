@@ -38,28 +38,4 @@ public class TranscodingRunnerTest {
 		verify(transcodingService, only()).transcode(1L);
 	}
 
-	private class TranscodingRunner {
-		private final TranscodingService transcodingService;
-		private final JobRepository jobRepository;
-
-		public TranscodingRunner(TranscodingService transcodingService, JobRepository jobRepository) {
-			this.transcodingService = transcodingService;
-			this.jobRepository = jobRepository;
-		}
-
-		public void run() {
-			Job job = getNextJob();
-			runTranscoding(job);
-		}
-
-		private Job getNextJob() {
-			return jobRepository.findEldestJobOfcreatedState();
-		}
-
-		private void runTranscoding(Job job) {
-			if (job == null)
-				return;
-			transcodingService.transcode(job.getId());
-		}
-	}
 }
