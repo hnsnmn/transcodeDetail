@@ -14,7 +14,7 @@ import static junit.framework.Assert.fail;
  * To change this template use File | Settings | File Templates.
  */
 public class DestinationStorageFactoryDefaultTest {
-	private DestinationStorageFactory factory = DestinationStorageFactory.DEFAULT;
+	private DestinationStorageFactory factory = new DefaultDestinationStorageFactory();
 
 	@Test
 	public void createFileDestinationStorage() {
@@ -26,5 +26,15 @@ public class DestinationStorageFactoryDefaultTest {
 	public void createNotSupportedDestination() {
 		factory.create("xxx://www.daum.net");
 		fail("must throw exception");
+	}
+
+	private class DefaultDestinationStorageFactory implements DestinationStorageFactory {
+		@Override
+		public DestinationStorage create(String destinationStorage) {
+			if (destinationStorage.startsWith("file://")) {
+				return new FileDestinationStorage(destinationStorage.substring("file://".length()));
+			}
+			throw new IllegalArgumentException("not supported destination storage " + destinationStorage);
+		}
 	}
 }
