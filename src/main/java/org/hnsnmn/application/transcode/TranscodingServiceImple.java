@@ -48,6 +48,7 @@ public class TranscodingServiceImple implements TranscodingService {
 			job.transcode(transcoder, thumbnailExtractor);
 		} catch (RuntimeException ex) {
 			logger.error("faile to do transcoding job {}", job.getId(), ex);
+			throw ex;
 		}
 	}
 }
