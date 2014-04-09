@@ -48,12 +48,13 @@ public class TranscodingServiceImplTest {
 	private ResultCallback resultCallback;
 
 	private TranscodingService transcodingService;
-	private final Long jobId = new Long(1);
 	private Job mockJob;
+
+	private final Long jobId = new Long(1);
 	private final File mockMultimediaFile = mock(File.class);
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
 	private final List<File> mockThumbnails = new ArrayList<File>();
-	private final RuntimeException mockException = new RuntimeException();
+	private final RuntimeException mockException = new RuntimeException("exception");
 
 	@Before
 	public void setUp() {
@@ -78,6 +79,7 @@ public class TranscodingServiceImplTest {
 		assertTrue(job.isFinished());
 		assertTrue(job.isSuccess());
 		assertEquals(State.COMPLETED, job.getLastState());
+		assertFalse(job.isExceptionOccurred());
 		assertNull(job.getExceptionMessage());
 
 		CollaborationVerifier verifyOption = new CollaborationVerifier();
@@ -142,6 +144,7 @@ public class TranscodingServiceImplTest {
 		assertTrue(job.isFinished());
 		assertFalse(job.isSuccess());
 		assertEquals(expectedLastState, job.getLastState());
+		assertTrue(job.isExceptionOccurred());
 		assertNotNull(job.getExceptionMessage());
 	}
 

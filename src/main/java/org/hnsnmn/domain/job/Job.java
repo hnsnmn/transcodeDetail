@@ -12,10 +12,15 @@ import java.util.List;
  */
 public class Job {
 
+	public enum State {
+		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING;
+	}
+
 	private final Long id;
 	private final MediaSourceFile mediaSourceFile;
 	private final DestinationStorage destinationStorage;
 	private final ResultCallback callback;
+
 	private List<OutputFormat> outputFormats;
 
 	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
@@ -26,22 +31,16 @@ public class Job {
 		this.callback = callback;
 	}
 
+
 	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
 		this(null, mediaSourceFile, destinationStorage, outputFormats, callback);
 	}
 
-
 	public Long getId() {
 		return null;
 	}
-
-	public enum State {
-		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING;
-
-	}
 	private State state;
 
-	private Exception occurredException;
 	private String exceptionMessage;
 
 	public boolean isSuccess() {
@@ -64,7 +63,7 @@ public class Job {
 		return isSuccess() || isExceptionOccurred();
 	}
 
-	private boolean isExceptionOccurred() {
+	public boolean isExceptionOccurred() {
 		return exceptionMessage != null;
 	}
 

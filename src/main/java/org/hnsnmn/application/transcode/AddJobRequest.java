@@ -23,4 +23,8 @@ public class AddJobRequest {
 	public List<OutputFormat> getOutputFormats() {
 		return null;  //To change body of created methods use File | Settings | File Templates.
 	}
+
+	public String getResultCallback() {
+		return null;
+	}
 }
