@@ -1,7 +1,6 @@
 package org.hnsnmn.application.transcode;
 
 import org.hnsnmn.domain.job.DestinationStorage;
-import org.hnsnmn.domain.job.FileDestinationStorage;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,14 +11,4 @@ import org.hnsnmn.domain.job.FileDestinationStorage;
  */
 public interface DestinationStorageFactory {
 	DestinationStorage create(String destinationStorage);
-
-	DestinationStorageFactory DEFAULT = new DestinationStorageFactory() {
-		@Override
-		public DestinationStorage create(String destinationStorage) {
-			if (destinationStorage.startsWith("file://")) {
-				return new FileDestinationStorage(destinationStorage.substring("file://".length()));
-			}
-			throw new IllegalArgumentException("not supported destination storage : " + destinationStorage);
-		}
-	};
 }
