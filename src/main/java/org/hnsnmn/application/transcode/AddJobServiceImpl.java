@@ -13,16 +13,16 @@ public class AddJobServiceImpl implements AddJobService {
 	private MediaSourceFileFactory mediaSourceFileFactory;
 	private DestinationStorageFactory destinationStorageFactory;
 	private JobRepository jobRepository;
-	private ResultCallback resultCallback;
+	private ResultCallbackFactory resultCallbackFactory;
 
 	public AddJobServiceImpl(MediaSourceFileFactory mediaSourceFileFactory,
 							 DestinationStorageFactory destinationStorageFactory,
 							 JobRepository jobRepository,
-							 ResultCallback resultCallback) {
+							 ResultCallbackFactory resultCallbackFactory) {
 		this.mediaSourceFileFactory = mediaSourceFileFactory;
 		this.destinationStorageFactory = destinationStorageFactory;
 		this.jobRepository = jobRepository;
-		this.resultCallback = resultCallback;
+		this.resultCallbackFactory = resultCallbackFactory;
 	}
 
 	public Long addJob(AddJobRequest request) {
@@ -34,6 +34,7 @@ public class AddJobServiceImpl implements AddJobService {
 	private Job createJob(AddJobRequest request) {
 		MediaSourceFile mediaSourceFile = mediaSourceFileFactory.create(request.getMediaSource());
 		DestinationStorage destinationStorage = destinationStorageFactory.create(request.getDestinationStorage());
+		ResultCallback resultCallback = resultCallbackFactory.create(request.getResultCallback());
 		return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats(), resultCallback);
 	}
 
