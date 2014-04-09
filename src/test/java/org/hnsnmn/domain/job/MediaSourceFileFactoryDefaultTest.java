@@ -1,6 +1,7 @@
 package org.hnsnmn.domain.job;
 
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
+import org.hnsnmn.domain.job.mediasource.DefaultMediaSourceFactory;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
@@ -31,14 +32,4 @@ public class MediaSourceFileFactoryDefaultTest {
 		fail("must throw exception");
 	}
 
-	private class DefaultMediaSourceFactory implements MediaSourceFileFactory {
-		@Override
-		public MediaSourceFile create(String mediaSource) {
-			if (mediaSource.startsWith("file://")) {
-				String filePath = mediaSource.substring("file://".length());
-				return new LocalStorageMediaSourceFile(filePath);
-			}
-			throw new IllegalArgumentException("not supported media source : " + mediaSource);
-		}
-	}
 }

@@ -1,6 +1,7 @@
 package org.hnsnmn.domain.job;
 
 import org.hnsnmn.application.transcode.DestinationStorageFactory;
+import org.hnsnmn.domain.job.destination.DefaultDestinationStorageFactory;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
@@ -28,13 +29,4 @@ public class DestinationStorageFactoryDefaultTest {
 		fail("must throw exception");
 	}
 
-	private class DefaultDestinationStorageFactory implements DestinationStorageFactory {
-		@Override
-		public DestinationStorage create(String destinationStorage) {
-			if (destinationStorage.startsWith("file://")) {
-				return new FileDestinationStorage(destinationStorage.substring("file://".length()));
-			}
-			throw new IllegalArgumentException("not supported destination storage " + destinationStorage);
-		}
-	}
 }
