@@ -42,7 +42,9 @@ public class JobTest {
 	@Test
 	public void jobShouldBeCreatedStateWhenCreated() {
 		Job job = new Job(mediaSource, destination, outputFormats, callback);
-		assertEquals(Job.State.CREATED, job.getLastState());
+//		assertEquals(Job.State.CREATED, job.getLastState());
+		assertEquals(Job.State.WAITING, job.getLastState());
+		assertTrue(job.isWaiting());
 		assertFalse(job.isFinished());
 		assertFalse(job.isSuccess());
 		assertFalse(job.isExceptionOccurred());

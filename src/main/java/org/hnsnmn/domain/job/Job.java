@@ -13,7 +13,7 @@ import java.util.List;
 public class Job {
 
 	public enum State {
-		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING, CREATED;
+		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING, WAITING;
 	}
 
 	private Long id;
@@ -33,7 +33,7 @@ public class Job {
 		this.destinationStorage = destinationStorage;
 		this.outputFormats = outputFormats;
 		this.callback = callback;
-		this.state = State.CREATED;
+		this.state = State.WAITING;
 	}
 
 	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
@@ -58,7 +58,7 @@ public class Job {
 	}
 
 	public boolean isWaiting() {
-		return state == null;
+		return state == State.WAITING;
 	}
 
 	public boolean isFinished() {
