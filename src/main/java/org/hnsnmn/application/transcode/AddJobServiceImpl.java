@@ -1,6 +1,8 @@
 package org.hnsnmn.application.transcode;
 
 import org.hnsnmn.domain.job.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
 * Created with IntelliJ IDEA.
@@ -10,6 +12,8 @@ import org.hnsnmn.domain.job.*;
 * To change this template use File | Settings | File Templates.
 */
 public class AddJobServiceImpl implements AddJobService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	private MediaSourceFileFactory mediaSourceFileFactory;
 	private DestinationStorageFactory destinationStorageFactory;
 	private JobRepository jobRepository;
@@ -32,13 +36,23 @@ public class AddJobServiceImpl implements AddJobService {
 	}
 
 	private Job createJob(AddJobRequest request) {
-		MediaSourceFile mediaSourceFile = mediaSourceFileFactory.create(request.getMediaSource());
-		DestinationStorage destinationStorage = destinationStorageFactory.create(request.getDestinationStorage());
-		ResultCallback resultCallback = resultCallbackFactory.create(request.getResultCallback());
-		return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats(), resultCallback);
+		try {
+			MediaSourceFile mediaSourceFile = mediaSourceFileFactory.create(request.getMediaSource());
+			DestinationStorage destinationStorage = destinationStorageFactory.create(request.getDestinationStorage());
+			ResultCallback resultCallback = resultCallbackFactory.create(request.getResultCallback());
+			return new Job(mediaSourceFile, destinationStorage, request.getOutputFormats(), resultCallback);
+		} catch (RuntimeException ex) {
+			logger.error("fail to create Job from request {}" + request, ex);
+			throw ex;
+		}
 	}
 
 	private Job saveJob(Job job) {
-		return jobRepository.save(job);
+		try {
+			return jobRepository.save(job);
+		} catch (RuntimeException ex) {
+			logger.error("fail to save Job to Repository", ex);
+			throw ex;
+		}
 	}
 }
