@@ -8,9 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -45,6 +43,9 @@ public class JobTest {
 	public void jobShouldBeCreatedStateWhenCreated() {
 		Job job = new Job(mediaSource, destination, outputFormats, callback);
 		assertEquals(Job.State.CREATED, job.getLastState());
+		assertFalse(job.isFinished());
+		assertFalse(job.isSuccess());
+		assertFalse(job.isExceptionOccurred());
 	}
 
 	@Test
@@ -59,6 +60,8 @@ public class JobTest {
 		Job job = new Job(jobId, mediaSource, destination, outputFormats, callback);
 		job.transcode(transcoder, thumbnailExtractor);
 		assertEquals(Job.State.COMPLETED, job.getLastState());
+		assertTrue(job.isSuccess());
+		assertTrue(job.isFinished());
 
 		verify(mediaSource, only()).getSourceFile();
 		verify(destination, only()).save(multimediafiles, thumbnails);
@@ -81,6 +84,8 @@ public class JobTest {
 		} catch (Exception e) {
 		}
 		assertEquals(Job.State.MEDIASOURCECOPYING, job.getLastState());
+		assertFalse(job.isSuccess());
+		assertTrue(job.isFinished());
 		assertTrue(job.isExceptionOccurred());
 
 		verify(mediaSource, only()).getSourceFile();
