@@ -31,26 +31,30 @@ public class AddJobServiceImplTest {
 	@Mock
 	private JobRepository jobRepository;
 	@Mock
-	private ResultCallback resultCallback;
+	private ResultCallbackFactory resultCallbackFactory;
+	@Mock
+	private ResultCallback mockResultCallback;
 
 	@Test
 	public void addJob() {
 		AddJobRequest request = new AddJobRequest();
 		when(mediaSourceFileFactory.create(request.getMediaSource())).thenReturn(mockMediaSourceFile);
 		when(destinationStorageFactory.create(request.getDestinationStorage())).thenReturn(mockDestinationStorage);
+		when(resultCallbackFactory.create(request.getResultCallback())).thenReturn(mockResultCallback);
 
 		final Long mockJobId = new Long(1);
 		Job mockSavedJob = mock(Job.class);
 		when(mockSavedJob.getId()).thenReturn(mockJobId);
 		when(jobRepository.save(any(Job.class))).thenReturn(mockSavedJob);
 
-		AddJobService addJobServiceImpl = new AddJobServiceImpl(mediaSourceFileFactory, destinationStorageFactory, jobRepository, resultCallback);
+		AddJobService addJobServiceImpl = new AddJobServiceImpl(mediaSourceFileFactory, destinationStorageFactory, jobRepository, resultCallbackFactory);
 		Long jobId = addJobServiceImpl.addJob(request);
 
 		assertNotNull(jobId);
 		verify(jobRepository, only()).save(any(Job.class));
 		verify(mediaSourceFileFactory, only()).create(request.getMediaSource());
 		verify(destinationStorageFactory, only()).create(request.getDestinationStorage());
+		verify(resultCallbackFactory, only()).create(request.getResultCallback());
 
 	}
 
