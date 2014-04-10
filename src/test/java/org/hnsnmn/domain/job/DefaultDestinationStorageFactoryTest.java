@@ -15,7 +15,7 @@ import static junit.framework.Assert.fail;
  * Time: 오후 5:34
  * To change this template use File | Settings | File Templates.
  */
-public class DestinationStorageFactoryDefaultTest {
+public class DefaultDestinationStorageFactoryTest {
 	private DestinationStorageFactory factory = new DefaultDestinationStorageFactory();
 
 	@Test
