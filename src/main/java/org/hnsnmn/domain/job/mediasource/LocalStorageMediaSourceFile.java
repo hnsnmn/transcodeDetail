@@ -11,15 +11,14 @@ import java.io.File;
  * Time: 오후 5:09
  * To change this template use File | Settings | File Templates.
  */
-public class LocalStorageMediaSourceFile implements MediaSourceFile {
-	private String filePath;
+public class LocalStorageMediaSourceFile extends MediaSourceFile {
 
 	public LocalStorageMediaSourceFile(String filePath) {
-		this.filePath = filePath;
+		super(filePath);
 	}
 
 	@Override
 	public File getSourceFile() {
-		return new File(filePath);
+		return new File(getUrl());
 	}
 }

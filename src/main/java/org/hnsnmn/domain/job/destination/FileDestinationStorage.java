@@ -12,11 +12,10 @@ import java.util.List;
  * Time: 오후 5:38
  * To change this template use File | Settings | File Templates.
  */
-public class FileDestinationStorage implements DestinationStorage {
-	private String folder;
+public class FileDestinationStorage extends DestinationStorage {
 
 	public FileDestinationStorage(String folder) {
-		this.folder = folder;
+		super(folder);
 	}
 
 	@Override
