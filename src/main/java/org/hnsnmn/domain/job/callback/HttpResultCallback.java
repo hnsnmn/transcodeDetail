@@ -10,18 +10,18 @@ import org.hnsnmn.domain.job.ResultCallback;
  * Time: 오전 10:28
  * To change this template use File | Settings | File Templates.
  */
-public class HttpResultCallback implements ResultCallback {
+public class HttpResultCallback extends ResultCallback {
 	public HttpResultCallback(String url) {
-		//To change body of created methods use File | Settings | File Templates.
+		super(url);
 	}
 
 	@Override
-	public void notifySuccessResult(long jobId) {
+	public void notifySuccessResult(Long jobId) {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	@Override
-	public void notifyFailResult(long jobId, Job.State lastState, String errorCause) {
+	public void notifyFailResult(Long jobId, Job.State lastState, String errorCause) {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

@@ -9,8 +9,18 @@ import static org.hnsnmn.domain.job.Job.*;
  * Time: 오후 6:08
  * To change this template use File | Settings | File Templates.
  */
-public interface ResultCallback {
-	void notifySuccessResult(long jobId);
+public abstract class ResultCallback {
+	private String url;
 
-	void notifyFailResult(long jobId, State lastState, String errorCause);
+	public ResultCallback(String url) {
+		this.url = url;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public abstract void notifySuccessResult(Long jobId);
+
+	public abstract void notifyFailResult(Long jobId, State lastState, String errorCause);
 }
