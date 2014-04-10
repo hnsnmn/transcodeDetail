@@ -10,7 +10,7 @@ import org.hnsnmn.domain.job.ResultCallback;
 * Time: 오전 10:28
 * To change this template use File | Settings | File Templates.
 */
-class DefaultResultCallbackFactory implements ResultCallbackFactory {
+public class DefaultResultCallbackFactory implements ResultCallbackFactory {
 	public ResultCallback create(String url) {
 		if (url.startsWith("http://") || url.startsWith("https://")) {
 			return new HttpResultCallback(url);
