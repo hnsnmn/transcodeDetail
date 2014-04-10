@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * To change this template use File | Settings | File Templates.
  */
 @Configuration
-public class DomanConfig {
+public class DomainConfig {
 
 	@Bean
 	public ResultCallbackFactory resultCallbackFactory() {
