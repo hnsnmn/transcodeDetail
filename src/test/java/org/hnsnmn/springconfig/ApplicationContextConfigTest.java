@@ -1,5 +1,6 @@
 package org.hnsnmn.springconfig;
 
+import org.hnsnmn.application.transcode.ResultCallbackFactory;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -20,5 +21,6 @@ public class ApplicationContextConfigTest {
 	public void getBeans() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationContextConfig.class);
 		assertNotNull(context.getBean("dataSource", DataSource.class));
+		assertNotNull(context.getBean("resultCallbackFactory", ResultCallbackFactory.class));
 	}
 }
