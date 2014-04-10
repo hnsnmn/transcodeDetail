@@ -1,6 +1,7 @@
-package org.hnsnmn.domain.job;
+package org.hnsnmn.domain.job.mediasource;
 
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
+import org.hnsnmn.domain.job.MediaSourceFile;
 import org.hnsnmn.domain.job.mediasource.DefaultMediaSourceFactory;
 import org.hnsnmn.domain.job.mediasource.LocalStorageMediaSourceFile;
 import org.junit.Test;

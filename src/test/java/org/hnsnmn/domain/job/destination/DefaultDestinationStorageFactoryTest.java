@@ -1,6 +1,7 @@
-package org.hnsnmn.domain.job;
+package org.hnsnmn.domain.job.destination;
 
 import org.hnsnmn.application.transcode.DestinationStorageFactory;
+import org.hnsnmn.domain.job.DestinationStorage;
 import org.hnsnmn.domain.job.destination.DefaultDestinationStorageFactory;
 import org.hnsnmn.domain.job.destination.FileDestinationStorage;
 import org.junit.Test;
