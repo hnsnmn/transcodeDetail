@@ -21,4 +21,9 @@ public class DefaultResultCallbackFactoryTest {
 		assertTrue(callback instanceof HttpResultCallback);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowExceptionWhenUrlIsNotSupported() {
+		callbackFactory.create("xxxx://localhost:8080/transcode/callback");
+	}
+
 }
