@@ -30,7 +30,9 @@ public class JobData {
 	@Column(name = "EXCEPTION_MESSAGE")
 	private String exceptionMessage;
 
-	@Transient
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "JOB_OUTPUTFORMAT", joinColumns = { @JoinColumn(name = "JOB_ID") })
+	@OrderColumn(name = "LIST_IDX")
 	private List<OutputFormat> outputFormats;
 
 	public Long getId() {
