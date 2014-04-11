@@ -1,5 +1,10 @@
 package org.hnsnmn.domain.job;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 /**
  * Created with IntelliJ IDEA.
  * User: hongseongmin
@@ -7,13 +12,34 @@ package org.hnsnmn.domain.job;
  * Time: 오후 2:05
  * To change this template use File | Settings | File Templates.
  */
+@Embeddable
 public class OutputFormat {
+
+	@Column(name = "WIDTH")
 	private int width;
+
+	@Column(name = "HEIGHT")
 	private int height;
+
+	@Column(name = "BITRATE")
 	private int bitrate;
+
+	@Column(name = "CONTAINER")
+	@Enumerated(EnumType.STRING)
 	private Container container;
+
+	@Column(name = "VIDEO_CODEC")
+	@Enumerated(EnumType.STRING)
 	private VideoCodec videoCodec;
+
+	@Column(name = "AUDIO_CODEC")
+	@Enumerated(EnumType.STRING)
 	private AudioCodec audioCodec;
+
+	@SuppressWarnings("unused")
+	public OutputFormat() {
+
+	}
 
 	public OutputFormat(int width, int height, int bitrate, Container container, VideoCodec videoCodec, AudioCodec audioCodec) {
 		this.width = width;
