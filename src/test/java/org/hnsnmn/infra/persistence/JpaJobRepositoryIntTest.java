@@ -19,6 +19,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,6 +39,14 @@ public class JpaJobRepositoryIntTest {
 	private ResultCallbackFactory resultCallbackFactory;
 	@Autowired
 	private JobRepository jobRepository;
+
+	@Test
+	public void findById() {
+		Job job = jobRepository.findById(1L);
+		assertNotNull(job);
+		assertTrue(job.isWaiting());
+		assertEquals(2, job.getOutputformats().size());
+	}
 
 	@Test
 	public void save() {
