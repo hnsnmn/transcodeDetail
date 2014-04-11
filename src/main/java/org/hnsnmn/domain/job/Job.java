@@ -1,6 +1,7 @@
 package org.hnsnmn.domain.job;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class Job {
 		this(null, mediaSourceFile, destinationStorage, outputFormats, callback);
 	}
 	public Long getId() {
-		return null;
+		return id;
 	}
 
 	private String exceptionMessage;
@@ -81,7 +82,7 @@ public class Job {
 	}
 
 	public List<OutputFormat> getOutputformats() {
-		return outputFormats;
+		return Collections.unmodifiableList(outputFormats);
 	}
 
 	public void transcode(Transcoder transcoder,
@@ -137,5 +138,8 @@ public class Job {
 
 	private void completed() {
 		changeState(State.COMPLETED);
+	}
+
+	public interface Exporter {
 	}
 }
