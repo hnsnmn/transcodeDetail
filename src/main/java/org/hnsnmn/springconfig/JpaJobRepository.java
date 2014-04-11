@@ -26,6 +26,7 @@ public class JpaJobRepository implements JobRepository {
 	private final MediaSourceFileFactory mediaSourceFileFactory;
 	private final DestinationStorageFactory destinationStorageFactory;
 	private final ResultCallbackFactory resultCallbackFactory;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
