@@ -1,6 +1,8 @@
 package org.hnsnmn.springconfig;
 
 
+import org.hnsnmn.domain.job.JobRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,4 +14,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RepositoryConfig {
+
+	@Bean
+	public JobRepository jobRepository() {
+		return new JpaJobRepository();
+	}
 }

@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Job {
 
+
 	public enum State {
 		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING, WAITING;
 	}
@@ -77,6 +78,10 @@ public class Job {
 	private void exceptionOccurred(RuntimeException ex) {
 		exceptionMessage = ex.getMessage();
 		callback.notifyFailResult(id, state, exceptionMessage);
+	}
+
+	public List<OutputFormat> getOutputformats() {
+		return outputFormats;
 	}
 
 	public void transcode(Transcoder transcoder,
