@@ -45,7 +45,6 @@ public class JpaJobRepositoryIntTest {
 		Job job = jobRepository.findById(1L);
 		assertNotNull(job);
 		assertTrue(job.isWaiting());
-		assertEquals(2, job.getOutputformats().size());
 	}
 
 	@Test
