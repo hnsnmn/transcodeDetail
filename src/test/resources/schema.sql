@@ -2,7 +2,7 @@ create table ID_GENERATOR (
   ENTITY_NAME varchar(50),
   ID_VALUE int,
   primary key(ENTITY_NAME)
-)
+);
 
 create table JOB (
 	JOB_ID              INT IDENTITY,
