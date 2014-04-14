@@ -1,4 +1,4 @@
-package org.hnsnmn.infra.repositories;
+package org.hnsnmn.infra.persistence;
 
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.OutputFormat;
