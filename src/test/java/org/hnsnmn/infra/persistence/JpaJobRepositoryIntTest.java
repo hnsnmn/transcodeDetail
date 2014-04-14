@@ -7,6 +7,9 @@ import org.hnsnmn.domain.job.Container;
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.JobRepository;
 import org.hnsnmn.domain.job.OutputFormat;
+import org.hnsnmn.domain.job.callback.HttpResultCallback;
+import org.hnsnmn.domain.job.destination.FileDestinationStorage;
+import org.hnsnmn.domain.job.mediasource.LocalStorageMediaSourceFile;
 import org.hnsnmn.springconfig.ApplicationContextConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,9 +56,9 @@ public class JpaJobRepositoryIntTest {
 		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
 		outputFormats.add(new OutputFormat(60, 40, 150, Container.MP4));
 
-		Job job = new Job(mediaSourceFileFactory.create("file://./video.avi"),
-				destinationStorageFactory.create("file://./target"),
-				outputFormats, resultCallbackFactory.create("http://"));
+		Job job = new Job(new LocalStorageMediaSourceFile("file://./video.avi"),
+				new FileDestinationStorage("file://./target"), outputFormats,
+				new HttpResultCallback("http://"));
 
 		Job savedJob = jobRepository.save(job);
 		assertNotNull(savedJob);
