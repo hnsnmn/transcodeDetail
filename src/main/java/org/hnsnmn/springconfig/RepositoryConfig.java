@@ -33,7 +33,7 @@ public class RepositoryConfig {
 
 	@Bean
 	public JobRepository jobRepository() {
-		return new JpaJobRepository(jobDataDao,
+		return new DbJobRepository(jobDataDao,
 				mediaSourceFileFactory,
 				destinationStorageFactory,
 				resultCallbackFactory);
