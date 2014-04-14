@@ -54,7 +54,10 @@ public class JpaJobRepository implements JobRepository {
 
 	@Override
 	public Job save(Job job) {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		JobData.ExporterToJobData exporter = new JobData.ExporterToJobData();
+		JobData jobData = job.exporter(exporter);
+		entityManager.persist(jobData);
+		return createJobFromJobData(jobData);
 	}
 
 	@Override
