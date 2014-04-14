@@ -140,6 +140,32 @@ public class Job {
 		changeState(State.COMPLETED);
 	}
 
-	public interface Exporter {
+	public <T> T exporter(Exporter<T> exporter) {
+		exporter.addId(id);
+		exporter.addState(state);
+		exporter.addMediaSource(mediaSourceFile.getUrl());
+		exporter.addDestinationStorage(destinationStorage.getUrl());
+		exporter.addResultCallback(callback.getUrl());
+		exporter.addOutputFormat(getOutputformats());
+		exporter.addExceptionMessage(exceptionMessage);
+		return exporter.build();
+	}
+
+	public static interface Exporter<T> {
+		public void addId(Long id);
+
+		public void addState(State state);
+
+		public void addMediaSource(String url);
+
+		public void addDestinationStorage(String url);
+
+		public void addResultCallback(String url);
+
+		public void addExceptionMessage(String exceptionMessage);
+
+		public void addOutputFormat(List<OutputFormat> outputFormats);
+
+		public T build();
 	}
 }
