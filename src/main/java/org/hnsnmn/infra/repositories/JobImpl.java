@@ -21,4 +21,11 @@ public class JobImpl extends Job {
 				jobData.getOutputFormats(),
 				resultCallbackFactory.create(jobData.getCallbackUrl()));
 	}
+
+	@Override
+	protected void changeState(State newState) {
+		super.changeState(newState);
+		jobDataDao.updateState(getId(), newState); // JobDataDao????
+	}
+
 }
