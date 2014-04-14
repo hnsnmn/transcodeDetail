@@ -3,7 +3,6 @@ package org.hnsnmn.springconfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +14,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @Import({ DomainConfig.class, RepositoryConfig.class, JpaConfig.class, FfmpegConfig.class })
 @ImportResource("classpath:spring/datasource.xml")
-@EnableTransactionManagement
 public class ApplicationContextConfig {
 }
