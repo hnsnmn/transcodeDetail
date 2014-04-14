@@ -5,7 +5,8 @@ import org.hnsnmn.application.transcode.DestinationStorageFactory;
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
 import org.hnsnmn.application.transcode.ResultCallbackFactory;
 import org.hnsnmn.domain.job.JobRepository;
-import org.hnsnmn.infra.repositories.JobDataDao;
+import org.hnsnmn.infra.persistence.DbJobRepository;
+import org.hnsnmn.infra.persistence.JobDataDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,9 +34,7 @@ public class RepositoryConfig {
 
 	@Bean
 	public JobRepository jobRepository() {
-		return new DbJobRepository(jobDataDao,
-				mediaSourceFileFactory,
-				destinationStorageFactory,
-				resultCallbackFactory);
+		return new DbJobRepository(jobDataDao, mediaSourceFileFactory,
+				destinationStorageFactory, resultCallbackFactory);
 	}
 }
