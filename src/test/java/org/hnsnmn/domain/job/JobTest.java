@@ -38,6 +38,7 @@ public class JobTest {
 	private ResultCallback callback;
 	@Mock
 	private DestinationStorage destination;
+	private final long jobId = 1L;
 
 	@Test
 	public void jobShouldBeCreatedStateWhenCreated() {
@@ -52,14 +53,13 @@ public class JobTest {
 
 	@Test
 	public void transcodeSuccessfully() {
-		long jobId = 1L;
 		when(mediaSource.getSourceFile()).thenReturn(sourceFile);
 		when(transcoder.transcode(sourceFile, outputFormats)).thenReturn(
 				multimediafiles);
 		when(thumbnailExtractor.extract(sourceFile, jobId)).thenReturn(
 				thumbnails);
 
-		Job job = new Job(jobId, mediaSource, destination, outputFormats, callback);
+		Job job = createWaitingJobWithID(jobId);
 		job.transcode(transcoder, thumbnailExtractor);
 		assertEquals(Job.State.COMPLETED, job.getLastState());
 		assertTrue(job.isSuccess());
@@ -71,14 +71,16 @@ public class JobTest {
 
 	}
 
+	private Job createWaitingJobWithID(long jobId) {
+		return new Job(jobId, Job.State.WAITING, mediaSource, destination, outputFormats, callback, null);
+	}
+
 	@Test
 	public void jobShouldThrownExceptionWhenFailGetSourceFile() {
-		long jobId = 1L;
 		RuntimeException exception = new RuntimeException("exception");
 		when(mediaSource.getSourceFile()).thenThrow(exception);
 
-		Job job = new Job(jobId, mediaSource, destination, outputFormats,
-				callback);
+		Job job = createWaitingJobWithID(jobId);
 
 		try {
 			job.transcode(transcoder, thumbnailExtractor);
