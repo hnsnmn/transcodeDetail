@@ -55,8 +55,12 @@ public class Job {
 		return state;
 	}
 
-	private void changeState(State newState) {
+	protected void changeState(State newState) {
 		this.state = newState;
+	}
+
+	protected boolean isExceptionOccurred() {
+		return exceptionMessage != null;
 	}
 
 	public boolean isWaiting() {
@@ -65,10 +69,6 @@ public class Job {
 
 	public boolean isFinished() {
 		return isSuccess() || isExceptionOccurred();
-	}
-
-	public boolean isExceptionOccurred() {
-		return exceptionMessage != null;
 	}
 
 	public String getExceptionMessage() {
