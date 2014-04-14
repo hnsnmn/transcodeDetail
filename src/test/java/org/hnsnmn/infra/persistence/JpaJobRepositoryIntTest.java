@@ -63,10 +63,10 @@ public class JpaJobRepositoryIntTest {
 		Job savedJob = jobRepository.save(job);
 		assertNotNull(savedJob);
 		assertNotNull(savedJob.getId());
-		assertValue(job, savedJob);
+		assertJobEquals(job, savedJob);
 	}
 
-	private void assertValue(Job job, Job savedJob) {
+	private void assertJobEquals(Job job, Job savedJob) {
 		assertEquals(job.getOutputformats().size(), savedJob.getOutputformats().size());
 	}
 }
