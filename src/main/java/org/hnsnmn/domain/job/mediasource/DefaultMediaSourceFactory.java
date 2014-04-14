@@ -14,8 +14,7 @@ public class DefaultMediaSourceFactory implements MediaSourceFileFactory {
 	@Override
 	public MediaSourceFile create(String mediaSource) {
 		if (mediaSource.startsWith("file://")) {
-			String filePath = mediaSource.substring("file://".length());
-			return new LocalStorageMediaSourceFile(filePath);
+			return new LocalStorageMediaSourceFile(mediaSource);
 		}
 		throw new IllegalArgumentException("not supported media source : " + mediaSource);
 	}
