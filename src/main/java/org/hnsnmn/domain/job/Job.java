@@ -29,17 +29,21 @@ public class Job {
 	private List<OutputFormat> outputFormats;
 
 
-	public Job(Long id, MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
+	public Job(Long id, State state, MediaSourceFile mediaSourceFile,
+			   DestinationStorage destinationStorage,
+			   List<OutputFormat> outputFormats,
+			   ResultCallback callback, String errorMessage) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
 		this.destinationStorage = destinationStorage;
 		this.outputFormats = outputFormats;
 		this.callback = callback;
-		this.state = State.WAITING;
+		this.state = state;
+		this.exceptionMessage = errorMessage;
 	}
 
 	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
-		this(null, mediaSourceFile, destinationStorage, outputFormats, callback);
+		this(null, State.WAITING, mediaSourceFile, destinationStorage, outputFormats, callback, null);
 	}
 	public Long getId() {
 		return id;
@@ -59,7 +63,7 @@ public class Job {
 		this.state = newState;
 	}
 
-	protected boolean isExceptionOccurred() {
+	public boolean isExceptionOccurred() {
 		return exceptionMessage != null;
 	}
 
