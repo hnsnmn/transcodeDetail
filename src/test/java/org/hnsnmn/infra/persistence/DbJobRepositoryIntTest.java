@@ -1,8 +1,5 @@
 package org.hnsnmn.infra.persistence;
 
-import org.hnsnmn.application.transcode.DestinationStorageFactory;
-import org.hnsnmn.application.transcode.MediaSourceFileFactory;
-import org.hnsnmn.application.transcode.ResultCallbackFactory;
 import org.hnsnmn.domain.job.Container;
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.JobRepository;
@@ -20,9 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,13 +28,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationContextConfig.class})
-public class JpaJobRepositoryIntTest {
-	@Autowired
-	private MediaSourceFileFactory mediaSourceFileFactory;
-	@Autowired
-	private DestinationStorageFactory destinationStorageFactory;
-	@Autowired
-	private ResultCallbackFactory resultCallbackFactory;
+public class DbJobRepositoryIntTest {
 	@Autowired
 	private JobRepository jobRepository;
 
