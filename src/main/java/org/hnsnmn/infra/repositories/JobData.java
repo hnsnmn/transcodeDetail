@@ -12,6 +12,8 @@ public class JobData {
 
 	@Id
 	@Column(name = "JOB_ID")
+	@TableGenerator(name = "JOB_ID_GEN", table = "ID_GENERATOR", pkColumnName = "ENTITY_NAME", pkColumnValue = "JOB", valueColumnName = "ID_VALUE")
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "JOB_ID_GEN")
 	private Long id;
 
 	@Column(name = "STATE")
@@ -61,6 +63,51 @@ public class JobData {
 
 	public List<OutputFormat> getOutputFormats() {
 		return outputFormats;
+	}
+
+	public static class ExporterToJobData implements Job.Exporter<JobData> {
+
+		private JobData jobData = new JobData();
+
+		@Override
+		public void addId(Long id) {
+			jobData.id = id;
+		}
+
+		@Override
+		public void addState(Job.State state) {
+			jobData.state = state;
+		}
+
+		@Override
+		public void addMediaSource(String url) {
+			jobData.sourceUrl = url;
+		}
+
+		@Override
+		public void addDestinationStorage(String url) {
+			jobData.destinationUrl = url;
+		}
+
+		@Override
+		public void addResultCallback(String url) {
+			jobData.callbackUrl = url;
+		}
+
+		@Override
+		public void addExceptionMessage(String exceptionMessage) {
+			jobData.exceptionMessage = exceptionMessage;
+		}
+
+		@Override
+		public void addOutputFormat(List<OutputFormat> outputFormats) {
+			jobData.outputFormats = outputFormats;
+		}
+
+		@Override
+		public JobData build() {
+			return jobData;
+		}
 	}
 
 }
