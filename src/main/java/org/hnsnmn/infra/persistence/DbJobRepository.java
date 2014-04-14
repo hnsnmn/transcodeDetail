@@ -1,17 +1,10 @@
-package org.hnsnmn.springconfig;
+package org.hnsnmn.infra.persistence;
 
 import org.hnsnmn.application.transcode.DestinationStorageFactory;
 import org.hnsnmn.application.transcode.MediaSourceFileFactory;
 import org.hnsnmn.application.transcode.ResultCallbackFactory;
 import org.hnsnmn.domain.job.Job;
 import org.hnsnmn.domain.job.JobRepository;
-import org.hnsnmn.infra.repositories.JobData;
-import org.hnsnmn.infra.repositories.JobImpl;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,28 +13,26 @@ import javax.persistence.PersistenceContext;
  * Time: 오전 11:06
  * To change this template use File | Settings | File Templates.
  */
-@Repository
-public class JpaJobRepository implements JobRepository {
+public class DbJobRepository implements JobRepository {
 
-	private final MediaSourceFileFactory mediaSourceFileFactory;
-	private final DestinationStorageFactory destinationStorageFactory;
-	private final ResultCallbackFactory resultCallbackFactory;
+	private MediaSourceFileFactory mediaSourceFileFactory;
+	private DestinationStorageFactory destinationStorageFactory;
+	private ResultCallbackFactory resultCallbackFactory;
+	private JobDataDao jobDataDao;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	public JpaJobRepository(MediaSourceFileFactory mediaSourceFileFactory,
-							DestinationStorageFactory destinationStorageFactory,
-							ResultCallbackFactory resultCallbackFactory) {
+	public DbJobRepository(JobDataDao jobDataDao,
+						   MediaSourceFileFactory mediaSourceFileFactory,
+						   DestinationStorageFactory destinationStorageFactory,
+						   ResultCallbackFactory resultCallbackFactory) {
+		this.jobDataDao = jobDataDao;
 		this.mediaSourceFileFactory = mediaSourceFileFactory;
 		this.destinationStorageFactory = destinationStorageFactory;
 		this.resultCallbackFactory = resultCallbackFactory;
 	}
 
-	@Transactional
 	@Override
 	public Job findById(Long jobId) {
-		JobData jobData = entityManager.find(JobData.class, jobId);
+		JobData jobData = jobDataDao.findById(jobId);
 		if (jobData == null) {
 			return null;
 		}
@@ -49,15 +40,20 @@ public class JpaJobRepository implements JobRepository {
 	}
 
 	private Job createJobFromJobData(JobData jobData) {
-		return new JobImpl(jobData, mediaSourceFileFactory, destinationStorageFactory, resultCallbackFactory);
+		return new JobImpl(jobDataDao, jobData.getId(), jobData.getState(),
+				mediaSourceFileFactory.create(jobData.getSourceUrl()),
+				destinationStorageFactory.create(jobData.getDestinationUrl()),
+				jobData.getOutputFormats(),
+				resultCallbackFactory.create(jobData.getCallbackUrl()),
+				jobData.getExceptionMessage());
 	}
 
 	@Override
 	public Job save(Job job) {
 		JobData.ExporterToJobData exporter = new JobData.ExporterToJobData();
 		JobData jobData = job.exporter(exporter);
-		entityManager.persist(jobData);
-		return createJobFromJobData(jobData);
+		JobData savedJobData = jobDataDao.save(jobData);
+		return createJobFromJobData(savedJobData);
 	}
 
 	@Override
