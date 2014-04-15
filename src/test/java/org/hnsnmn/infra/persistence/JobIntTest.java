@@ -54,5 +54,7 @@ public class JobIntTest {
 		Job updatedJob = jobRepository.findById(jobId); // DB에서 동일 Job로딩
 		assertEquals(Job.State.TRANSCODING, job.getLastState());
 		assertEquals(Job.State.TRANSCODING, updatedJob.getLastState());	// 반영 확인
+		assertEquals("강제발생", job.getExceptionMessage());
+		assertEquals(job.getExceptionMessage(), updatedJob.getExceptionMessage());
 	}
 }
