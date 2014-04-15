@@ -1,6 +1,7 @@
 package org.hnsnmn.application.transcode;
 
 import org.hnsnmn.domain.job.OutputFormat;
+import org.hnsnmn.domain.job.ThumbnailPolicy;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class AddJobRequest {
 	private String destinationStorage;
 	private String resultCallback;
 	private List<OutputFormat> outputFormats;
+	private ThumbnailPolicy thumbnailPolicy;
 
 	public void setMediaSource(String mediaSource) {
 		this.mediaSource = mediaSource;
@@ -31,6 +33,10 @@ public class AddJobRequest {
 
 	public void setResultCallback(String resultCallback) {
 		this.resultCallback = resultCallback;
+	}
+
+	public void setThumbnailPolicy(ThumbnailPolicy thumbnailPolicy) {
+		this.thumbnailPolicy = thumbnailPolicy;
 	}
 
 	public String getMediaSource() {
@@ -49,11 +55,16 @@ public class AddJobRequest {
 		return resultCallback;
 	}
 
+	public ThumbnailPolicy getThumbnailPolich() {
+		return thumbnailPolicy;
+	}
+
 	@Override
 	public String toString() {
 		return "AddJobRequest [mediaSource=" + mediaSource
 				+ ", destinationStorage=" + destinationStorage
 				+ ", outputFormats=" + outputFormats
+				+ ", thumbnailPolich=" + thumbnailPolicy
 				+ ", resultCallback=" + resultCallback + "]";
 	}
 }

@@ -45,7 +45,7 @@ public class DbJobRepository implements JobRepository {
 				destinationStorageFactory.create(jobData.getDestinationUrl()),
 				jobData.getOutputFormats(),
 				resultCallbackFactory.create(jobData.getCallbackUrl()),
-				jobData.getExceptionMessage());
+				jobData.getThumbnailPolicy(), jobData.getExceptionMessage());
 	}
 
 	@Override

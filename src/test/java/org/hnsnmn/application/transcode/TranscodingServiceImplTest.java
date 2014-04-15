@@ -55,17 +55,19 @@ public class TranscodingServiceImplTest {
 	private final List<File> mockMultimediaFiles = new ArrayList<File>();
 	private final List<File> mockThumbnails = new ArrayList<File>();
 	private final RuntimeException mockException = new RuntimeException("exception");
+	private ThumbnailPolicy thumbnailPolicy;
 
 	@Before
 	public void setUp() {
+		thumbnailPolicy = new ThumbnailPolicy();
 		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor, jobRepository);
 
-		mockJob = new Job(jobId, State.WAITING, mediaSourceFile, destinationStroage, outputFormats, resultCallback, null);
+		mockJob = new Job(jobId, State.WAITING, mediaSourceFile, destinationStroage, outputFormats, resultCallback, thumbnailPolicy, null);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
 		when(transcoder.transcode(mockMultimediaFile, outputFormats)).thenReturn(mockMultimediaFiles);
-		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenReturn(mockThumbnails);
+		when(thumbnailExtractor.extract(mockMultimediaFile, thumbnailPolicy)).thenReturn(mockThumbnails);
 	}
 
 	@Test
@@ -114,7 +116,7 @@ public class TranscodingServiceImplTest {
 
 	@Test
 	public void transcodeFailBecauseExceptionOccuredAtThumbnailExtractor() {
-		when(thumbnailExtractor.extract(mockMultimediaFile, jobId)).thenThrow(mockException);
+		when(thumbnailExtractor.extract(mockMultimediaFile, thumbnailPolicy)).thenThrow(mockException);
 
 		executeFaillingTranscodeAndAssertFail(State.EXTRACTINGTHUMBNAIL);
 
@@ -160,9 +162,9 @@ public class TranscodingServiceImplTest {
 				verify(transcoder, only()).transcode(mockMultimediaFile, outputFormats);
 
 			if (this.thumbnailExtractorNever)
-				verify(thumbnailExtractor, never()).extract(any(File.class), anyLong());
+				verify(thumbnailExtractor, never()).extract(any(File.class), any(ThumbnailPolicy.class));
 			else
-				verify(thumbnailExtractor, only()).extract(mockMultimediaFile, jobId);
+				verify(thumbnailExtractor, only()).extract(mockMultimediaFile, thumbnailPolicy);
 
 			if (this.destinationStorageNever)
 				verify(destinationStroage, never()).save(anyListOf(File.class), anyListOf(File.class));

@@ -1,9 +1,6 @@
 package org.hnsnmn.infra.persistence;
 
-import org.hnsnmn.domain.job.Container;
-import org.hnsnmn.domain.job.Job;
-import org.hnsnmn.domain.job.JobRepository;
-import org.hnsnmn.domain.job.OutputFormat;
+import org.hnsnmn.domain.job.*;
 import org.hnsnmn.domain.job.callback.HttpResultCallback;
 import org.hnsnmn.domain.job.destination.FileDestinationStorage;
 import org.hnsnmn.domain.job.mediasource.LocalStorageMediaSourceFile;
@@ -38,6 +35,8 @@ public class DbJobRepositoryIntTest {
 		assertNotNull(job);
 		assertTrue(job.isWaiting());
 		assertEquals(2, job.getOutputformats().size());
+		assertNotNull(job.getThumbnailPolicy());
+		assertEquals(ThumbnailPolicy.Option.FIRST, job.getThumbnailPolicy().getOption());
 	}
 
 	@Test
@@ -45,9 +44,10 @@ public class DbJobRepositoryIntTest {
 		List<OutputFormat> outputFormats = new ArrayList<OutputFormat>();
 		outputFormats.add(new OutputFormat(60, 40, 150, Container.MP4));
 
+		ThumbnailPolicy thumbnailPolicy = new ThumbnailPolicy();
 		Job job = new Job(new LocalStorageMediaSourceFile("file://./video.avi"),
 				new FileDestinationStorage("file://./target"), outputFormats,
-				new HttpResultCallback("http://"));
+				new HttpResultCallback("http://"), thumbnailPolicy);
 
 		Job savedJob = jobRepository.save(job);
 		assertNotNull(savedJob);

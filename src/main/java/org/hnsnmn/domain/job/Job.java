@@ -16,6 +16,7 @@ public class Job {
 
 	public enum State {
 		COMPLETED, MEDIASOURCECOPYING, TRANSCODING, EXTRACTINGTHUMBNAIL, SENDING, NOTIFYING, WAITING;
+
 	}
 
 	private Long id;
@@ -25,26 +26,33 @@ public class Job {
 	private DestinationStorage destinationStorage;
 
 	private ResultCallback callback;
-
 	private List<OutputFormat> outputFormats;
 
+	private ThumbnailPolicy thumbnailPolicy;
 
 	public Job(Long id, State state, MediaSourceFile mediaSourceFile,
 			   DestinationStorage destinationStorage,
 			   List<OutputFormat> outputFormats,
-			   ResultCallback callback, String errorMessage) {
+			   ResultCallback callback,
+			   ThumbnailPolicy thumbnailPolicy, String errorMessage) {
 		this.id = id;
 		this.mediaSourceFile = mediaSourceFile;
 		this.destinationStorage = destinationStorage;
 		this.outputFormats = outputFormats;
 		this.callback = callback;
 		this.state = state;
+		this.thumbnailPolicy = thumbnailPolicy;
 		this.exceptionMessage = errorMessage;
 	}
 
-	public Job(MediaSourceFile mediaSourceFile, DestinationStorage destinationStorage, List<OutputFormat> outputFormats, ResultCallback callback) {
-		this(null, State.WAITING, mediaSourceFile, destinationStorage, outputFormats, callback, null);
+
+	public Job(MediaSourceFile mediaSourceFile,
+			   DestinationStorage destinationStorage,
+			   List<OutputFormat> outputFormats,
+			   ResultCallback callback, ThumbnailPolicy thumbnailPolicy) {
+		this(null, State.WAITING, mediaSourceFile, destinationStorage, outputFormats, callback, thumbnailPolicy, null);
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -79,14 +87,18 @@ public class Job {
 		return exceptionMessage;
 	}
 
-
 	protected void exceptionOccurred(RuntimeException ex) {
 		exceptionMessage = ex.getMessage();
 		callback.notifyFailResult(id, state, exceptionMessage);
 	}
 
+
 	public List<OutputFormat> getOutputformats() {
 		return Collections.unmodifiableList(outputFormats);
+	}
+
+	public ThumbnailPolicy getThumbnailPolicy() {
+		return thumbnailPolicy;
 	}
 
 	public void transcode(Transcoder transcoder,
@@ -127,7 +139,7 @@ public class Job {
 
 	private List<File> extractThumbnail(File multimediaFile, ThumbnailExtractor thumbnailExtractor) {
 		changeState(State.EXTRACTINGTHUMBNAIL);
-		return thumbnailExtractor.extract(multimediaFile, id);
+		return thumbnailExtractor.extract(multimediaFile, thumbnailPolicy);
 	}
 
 	private void sendCreatedFileToDestination(List<File> multimediaFiles, List<File> thumbnails) {
@@ -152,6 +164,7 @@ public class Job {
 		exporter.addResultCallback(callback.getUrl());
 		exporter.addOutputFormat(getOutputformats());
 		exporter.addExceptionMessage(exceptionMessage);
+		exporter.addThumbnailPolicy(thumbnailPolicy);
 		return exporter.build();
 	}
 
@@ -169,6 +182,8 @@ public class Job {
 		public void addExceptionMessage(String exceptionMessage);
 
 		public void addOutputFormat(List<OutputFormat> outputFormats);
+
+		public void addThumbnailPolicy(ThumbnailPolicy thumbnailPolicy);
 
 		public T build();
 	}

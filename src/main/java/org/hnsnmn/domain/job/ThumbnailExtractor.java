@@ -11,5 +11,5 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface ThumbnailExtractor {
-	List<File> extract(File mockMultimediaFile, Long jobId);
+	List<File> extract(File mockMultimediaFile, ThumbnailPolicy thumbnailPolicy);
 }
