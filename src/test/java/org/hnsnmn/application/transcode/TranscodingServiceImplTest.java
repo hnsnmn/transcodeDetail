@@ -60,7 +60,7 @@ public class TranscodingServiceImplTest {
 	public void setUp() {
 		transcodingService = new TranscodingServiceImple(transcoder, thumbnailExtractor, jobRepository);
 
-		mockJob = new Job(jobId, mediaSourceFile, destinationStroage, outputFormats, resultCallback);
+		mockJob = new Job(jobId, State.WAITING, mediaSourceFile, destinationStroage, outputFormats, resultCallback, null);
 
 		when(jobRepository.findById(jobId)).thenReturn(mockJob);
 		when(mediaSourceFile.getSourceFile()).thenReturn(mockMultimediaFile);
