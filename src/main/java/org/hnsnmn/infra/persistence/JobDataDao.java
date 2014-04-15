@@ -23,4 +23,9 @@ public interface JobDataDao extends Repository<JobData, Long> {
 	@Modifying
 	@Query("update JobData j set j.state = ?2 where j.id = ?1")
 	public int updateState(Long id, Job.State newState);
+
+	@Transactional
+	@Modifying
+	@Query("update JobData j set j.exceptionMessage = ?2 where j.id = ?1")
+	public int updateExceptionMessage(Long id, String exceptionMessage);
 }

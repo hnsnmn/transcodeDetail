@@ -32,4 +32,10 @@ public class JobImpl extends Job {
 		jobDataDao.updateState(getId(), newState);
 	}
 
+	@Override
+	protected void exceptionOccurred(RuntimeException ex) {
+		String exceptionMessage = ExceptionMessageUtil.getMessage(ex);
+		jobDataDao.updateExceptionMessage(getId(), exceptionMessage);
+		super.exceptionOccurred(ex);
+	}
 }
