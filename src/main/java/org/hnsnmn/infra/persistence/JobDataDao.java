@@ -1,6 +1,7 @@
 package org.hnsnmn.infra.persistence;
 
 
+import org.hnsnmn.domain.job.Job;
 import org.springframework.data.repository.Repository;
 
 /**
@@ -14,4 +15,6 @@ public interface JobDataDao extends Repository<JobData, Long> {
 	public JobData save(JobData jobData);
 
 	public JobData findById(Long id);
+
+	public int updateState(Long id, Job.State newState);
 }
