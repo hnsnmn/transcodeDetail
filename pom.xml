@@ -88,6 +88,11 @@
 
 		<!-- ffmpeg -->
 		<dependency>
+			<groupId>it.sauronsoftware</groupId>
+			<artifactId>java</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
 			<groupId>xuggle</groupId>
 			<artifactId>xuggle-xuggler</artifactId>
 			<version>5.3</version>
