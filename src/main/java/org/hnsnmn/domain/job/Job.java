@@ -80,7 +80,7 @@ public class Job {
 	}
 
 
-	private void exceptionOccurred(RuntimeException ex) {
+	protected void exceptionOccurred(RuntimeException ex) {
 		exceptionMessage = ex.getMessage();
 		callback.notifyFailResult(id, state, exceptionMessage);
 	}
