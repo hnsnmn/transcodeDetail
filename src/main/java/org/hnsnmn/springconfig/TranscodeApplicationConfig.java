@@ -29,6 +29,12 @@ public class TranscodeApplicationConfig {
 
 	private ThumbnailExtractor thumbnailExtractor;
 
+
+	@Bean
+	public TranscodingRunner transcodingRunner() {
+		return new TranscodingRunner(transcodingService(), jobQueue());
+	}
+
 	@Bean
 	public AddJobService addJobService() {
 		return new AddJobServiceImpl(mediaSourceFileFactory,
